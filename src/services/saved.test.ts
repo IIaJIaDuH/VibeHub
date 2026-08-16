@@ -1,12 +1,20 @@
 import { describe, expect, it } from "vitest";
 import { fromBookmarks, isSaved, savedId, toggleSaved } from "./saved";
+import type { Tool } from "../types/hub";
 
-const TOOL = {
-  id: "codex",
-  name: "Codex",
-  typeLabel: "CLI",
-  bookmarked: false,
-} as never;
+function tool(partial: Partial<Tool>): Tool {
+  return {
+    id: "codex",
+    name: "Codex",
+    category: "coding",
+    type: "cli",
+    typeLabel: "CLI",
+    tags: [],
+    summary: "",
+    compatibility: [],
+    ...partial,
+  };
+}
 
 describe("savedId", () => {
   it("объединяет kind и id", () => {
@@ -30,8 +38,8 @@ describe("toggleSaved / isSaved", () => {
 describe("fromBookmarks", () => {
   it("собирает отмеченные инструменты", () => {
     const items = fromBookmarks([
-      TOOL,
-      { ...TOOL, id: "skill-a", bookmarked: true },
+      tool({}),
+      tool({ id: "skill-a", bookmarked: true }),
     ]);
     expect(items.length).toBe(1);
     expect(items[0].targetId).toBe("skill-a");
