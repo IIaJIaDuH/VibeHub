@@ -1,0 +1,87 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: start center;
+  padding: 12vh 16px 16px;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.panel {
+  width: min(560px, 100%);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg-elevated);
+  overflow: hidden;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-dim);
+}
+
+.field input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  outline: none;
+  font-size: 17px;
+  color: var(--text);
+}
+
+.field kbd {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+}
+
+.block p {
+  margin: 4px 8px 6px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.block button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  text-align: left;
+}
+
+.block button:hover {
+  background: var(--surface);
+}
+
+.block strong {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.block em {
+  font-style: normal;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.empty {
+  padding: 10px 12px;
+  color: var(--text-muted);
+  font-size: 14px;
+}

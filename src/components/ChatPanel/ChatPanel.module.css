@@ -1,0 +1,324 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  min-height: 0;
+  border-left: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 52px;
+  padding: 8px 12px 8px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.channelWrap {
+  position: relative;
+}
+
+.channel {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  margin: 0 0 0 -8px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.channel:hover {
+  background: var(--surface-hover);
+}
+
+.chevron {
+  transform: rotate(90deg);
+  color: var(--text-dim);
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: -8px;
+  z-index: 4;
+  min-width: 148px;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+}
+
+.menu button {
+  display: block;
+  width: 100%;
+  padding: 7px 10px;
+  border-radius: 6px;
+  text-align: left;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.menu button:hover,
+.menuActive {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.iconBtn {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  color: var(--text-dim);
+}
+
+.iconBtn:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.thread {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 12px 10px 8px;
+}
+
+.msg {
+  position: relative;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 10px;
+}
+
+.msg:hover {
+  background: var(--bg-elevated);
+}
+
+.avatar {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  margin-top: 2px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.meta {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0;
+  font-size: 13px;
+}
+
+.meta strong {
+  font-weight: 600;
+}
+
+.meta time {
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+.bubble {
+  margin: 4px 0 0;
+  padding: 8px 10px;
+  border-radius: 12px 12px 12px 4px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.mention {
+  display: inline;
+  margin: 0 1px;
+  padding: 0 4px;
+  border-radius: 4px;
+  background: var(--accent-soft);
+  color: var(--accent-hover);
+  font: inherit;
+}
+
+.mention:hover {
+  color: var(--text);
+}
+
+.hover {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  display: none;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-elevated);
+}
+
+.msg:hover .hover {
+  display: flex;
+}
+
+.hover button {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  color: var(--text-dim);
+}
+
+.hover button:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.composerWrap {
+  position: relative;
+  padding: 8px 12px 14px;
+}
+
+.ac {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: calc(100% - 10px);
+  z-index: 3;
+  max-height: 280px;
+  overflow: auto;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-elevated);
+}
+
+.acLabel {
+  margin: 8px 8px 4px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.acLabel:first-child {
+  margin-top: 0;
+}
+
+.acItem {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.acItem:hover,
+.acOn {
+  background: var(--surface-hover);
+}
+
+.acItem strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.acItem em {
+  display: block;
+  font-style: normal;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.acMark {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.composer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 10px 8px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.composer textarea {
+  width: 100%;
+  min-height: 44px;
+  max-height: 120px;
+  resize: none;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.4;
+  outline: none;
+}
+
+.composerBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.plus,
+.send {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  color: var(--text-dim);
+}
+
+.plus:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.send {
+  background: var(--accent);
+  color: #0b0b0c;
+}
+
+.send:hover {
+  background: var(--accent-hover);
+}
+
+.send:disabled {
+  opacity: 0.35;
+}

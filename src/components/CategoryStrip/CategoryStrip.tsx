@@ -1,0 +1,72 @@
+import { useEffect, useRef, useState } from "react";
+import { IconChevron } from "../icons";
+import styles from "./CategoryStrip.module.css";
+
+interface Item {
+  id: string;
+  label: string;
+}
+
+interface CategoryStripProps {
+  items: Item[];
+  value: string;
+  onChange: (id: string) => void;
+}
+
+export function CategoryStrip({ items, value, onChange }: CategoryStripProps) {
+  const scroller = useRef<HTMLDivElement>(null);
+  const [canLeft, setCanLeft] = useState(false);
+  const [canRight, setCanRight] = useState(false);
+
+  const update = () => {
+    const el = scroller.current;
+    if (!el) return;
+    setCanLeft(el.scrollLeft > 8);
+    setCanRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 8);
+  };
+
+  useEffect(() => {
+    update();
+    const el = scroller.current;
+    if (!el) return;
+    el.addEventListener("scroll", update);
+    window.addEventListener("resize", update);
+    return () => {
+      el.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [items]);
+
+  const scroll = (dir: number) => {
+    scroller.current?.scrollBy({ left: dir * 160, behavior: "smooth" });
+  };
+
+  return (
+    <div className={styles.wrap}>
+      {canLeft ? (
+        <button type="button" className={styles.arrow} aria-label="Назад" onClick={() => scroll(-1)}>
+          <IconChevron width={16} height={16} style={{ transform: "rotate(180deg)" }} />
+        </button>
+      ) : null}
+      <div className={styles.scroller} ref={scroller} role="tablist">
+        {items.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            role="tab"
+            aria-selected={item.id === value}
+            className={`${styles.tab} ${item.id === value ? styles.on : ""}`}
+            onClick={() => onChange(item.id)}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+      {canRight ? (
+        <button type="button" className={`${styles.arrow} ${styles.right}`} aria-label="Дальше" onClick={() => scroll(1)}>
+          <IconChevron width={16} height={16} />
+        </button>
+      ) : null}
+    </div>
+  );
+}

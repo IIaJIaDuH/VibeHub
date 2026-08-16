@@ -1,0 +1,18 @@
+.btn {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  color: var(--text-dim);
+}
+
+.btn:hover {
+  color: var(--text);
+  background: var(--surface);
+}
+
+.active {
+  color: var(--accent);
+}
