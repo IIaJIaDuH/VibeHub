@@ -35,6 +35,9 @@ const modelDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/models/$",
   component: EntityPage,
+  params: {
+    parse: (raw) => (raw._splat ? raw : false),
+  },
 });
 
 const toolsRoute = createRoute({
@@ -47,6 +50,9 @@ const toolDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/tools/$",
   component: EntityPage,
+  params: {
+    parse: (raw) => (raw._splat ? raw : false),
+  },
 });
 
 const benchmarksRoute = createRoute({
