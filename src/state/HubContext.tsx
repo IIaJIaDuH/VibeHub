@@ -165,10 +165,7 @@ export function HubProvider({ children }: { children: ReactNode }) {
           author: CURRENT_USER,
           text: trimmed,
           spans: parseSpans(trimmed, mentionEntities),
-          createdAt: new Date().toLocaleTimeString("ru-RU", {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
+          createdAt: new Date().toISOString(),
         },
       ]);
     },

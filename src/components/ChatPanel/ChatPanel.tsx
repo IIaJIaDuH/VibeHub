@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { CHAT_CHANNELS } from "../../data/chat";
+import { formatDateTime } from "../../lib/datetime";
 import { RichText } from "../mentions/RichText";
 import { MentionField } from "../mentions/MentionField";
 import { useHub } from "../../state/HubContext";
@@ -132,7 +133,7 @@ function ChatRow({
       <div className={styles.msgBody}>
         <p className={styles.meta}>
           <strong>{message.author.name}</strong>
-          <time>{message.createdAt}</time>
+          <time>{formatDateTime(message.createdAt)}</time>
         </p>
         <p className={styles.bubble}>
           <RichText text={message.text} spans={message.spans} entities={entities} />

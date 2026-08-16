@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "../../components/Button/Button";
 import { RichText } from "../../components/mentions/RichText";
+import { formatDateTime } from "../../lib/datetime";
 import { useHub } from "../../state/HubContext";
 import type { Post, PostComment } from "../../types/posts";
 import { describePost, isSaved } from "../../services/saved";
@@ -51,7 +52,7 @@ export function PostCard({
           </a>
         ))}
       <p className={styles.meta}>
-        {post.author.name} · {post.createdAt}
+        {post.author.name} · {formatDateTime(post.createdAt)}
       </p>
       {!compact
         ? post.comments.map((comment) => (

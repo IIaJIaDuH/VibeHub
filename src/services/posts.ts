@@ -14,7 +14,7 @@ export function createPost(
     author: CURRENT_USER,
     title: input.title.trim(),
     content: input.content.trim(),
-    createdAt: "сейчас",
+    createdAt: new Date().toISOString(),
     tags: input.tags,
     relatedEntities: relatedFromSpans(spans),
     reactions: [],
@@ -33,7 +33,7 @@ export function addComment(
     id: `c-${Date.now()}`,
     author: CURRENT_USER,
     content: content.trim(),
-    createdAt: "сейчас",
+    createdAt: new Date().toISOString(),
   };
   return posts.map((post) =>
     post.id === postId ? { ...post, comments: [...post.comments, comment] } : post,
