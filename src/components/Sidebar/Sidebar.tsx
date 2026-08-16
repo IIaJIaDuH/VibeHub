@@ -31,14 +31,8 @@ const LIBRARY: { id: Route; label: string; icon: typeof IconBookmarks }[] = [
 ];
 
 export function Sidebar({ mobileOpen, onNavigate }: SidebarProps) {
-  const {
-    route,
-    setRoute,
-    setAddOpen,
-    setSearchOpen,
-    sidebarCollapsed,
-    setSidebarCollapsed,
-  } = useHub();
+  const { route, setRoute, setAddOpen, setSearchOpen, sidebarCollapsed, setSidebarCollapsed } =
+    useHub();
 
   const tip = (label: string) => (sidebarCollapsed ? label : undefined);
 

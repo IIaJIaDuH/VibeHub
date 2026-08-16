@@ -54,11 +54,7 @@ export function MoveWebsiteModal({
           <form onSubmit={handleSubmit}>
             <label className={styles.field}>
               Выберите новую коллекцию
-              <select
-                value={selectedId}
-                onChange={(e) => setSelectedId(e.target.value)}
-                required
-              >
+              <select value={selectedId} onChange={(e) => setSelectedId(e.target.value)} required>
                 {targetOptions.map((col) => (
                   <option key={col.id} value={col.id}>
                     {col.name}

@@ -3,9 +3,7 @@ import { addComment, createPost } from "./posts";
 import type { EntityRef } from "../types/entities";
 import type { CreatePostInput } from "../types/posts";
 
-const ENTITIES: EntityRef[] = [
-  { kind: "model", id: "openai/gpt-4o", name: "GPT-4o" },
-];
+const ENTITIES: EntityRef[] = [{ kind: "model", id: "openai/gpt-4o", name: "GPT-4o" }];
 
 const INPUT: CreatePostInput = {
   type: "discussion",

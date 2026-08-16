@@ -32,10 +32,7 @@ export function searchHub(
 
   const toolHits: SearchHit[] = tools
     .filter((t) =>
-      matchesQuery(
-        `${t.name} ${t.typeLabel} ${t.summary || ""} ${t.tags.join(" ")}`,
-        q,
-      ),
+      matchesQuery(`${t.name} ${t.typeLabel} ${t.summary || ""} ${t.tags.join(" ")}`, q),
     )
     .slice(0, 5)
     .map((t) => ({
@@ -48,9 +45,7 @@ export function searchHub(
     }));
 
   const postHits: SearchHit[] = posts
-    .filter((p) =>
-      matchesQuery(`${p.title} ${p.content} ${p.tags.join(" ")}`, q),
-    )
+    .filter((p) => matchesQuery(`${p.title} ${p.content} ${p.tags.join(" ")}`, q))
     .slice(0, 8)
     .map((p) => ({
       id: p.id,

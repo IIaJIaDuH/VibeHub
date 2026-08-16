@@ -8,11 +8,7 @@ interface SearchProps {
   placeholder?: string;
 }
 
-export function Search({
-  value,
-  onChange,
-  placeholder = "Поиск...",
-}: SearchProps) {
+export function Search({ value, onChange, placeholder = "Поиск..." }: SearchProps) {
   const [open, setOpen] = useState(Boolean(value));
   const inputRef = useRef<HTMLInputElement>(null);
 

@@ -8,6 +8,4 @@ export interface EntityRef {
   name: string;
 }
 
-export type ContentSpan =
-  | { type: "text"; value: string }
-  | { type: "mention"; entity: EntityRef };
+export type ContentSpan = { type: "text"; value: string } | { type: "mention"; entity: EntityRef };

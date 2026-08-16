@@ -3,10 +3,7 @@ import { parseSpans, relatedFromSpans } from "./content";
 import type { EntityRef } from "../types/entities";
 import type { CreatePostInput, Post, PostComment } from "../types/posts";
 
-export function createPost(
-  input: CreatePostInput,
-  entities: EntityRef[],
-): Post {
+export function createPost(input: CreatePostInput, entities: EntityRef[]): Post {
   const spans = parseSpans(input.content, entities);
   return {
     id: `post-${Date.now()}`,
@@ -24,11 +21,7 @@ export function createPost(
   };
 }
 
-export function addComment(
-  posts: Post[],
-  postId: string,
-  content: string,
-): Post[] {
+export function addComment(posts: Post[], postId: string, content: string): Post[] {
   const comment: PostComment = {
     id: `c-${Date.now()}`,
     author: CURRENT_USER,
@@ -40,11 +33,7 @@ export function addComment(
   );
 }
 
-export function acceptAnswer(
-  posts: Post[],
-  postId: string,
-  commentId: string,
-): Post[] {
+export function acceptAnswer(posts: Post[], postId: string, commentId: string): Post[] {
   return posts.map((post) =>
     post.id === postId && post.type === "question"
       ? { ...post, solved: true, acceptedAnswerId: commentId }

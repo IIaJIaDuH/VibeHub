@@ -22,9 +22,7 @@ export function Shell() {
     return () => window.removeEventListener("keydown", onKey);
   }, [searchOpen, setSearchOpen]);
 
-  const shellClass = ["shell", sidebarCollapsed ? "is-collapsed" : ""]
-    .filter(Boolean)
-    .join(" ");
+  const shellClass = ["shell", sidebarCollapsed ? "is-collapsed" : ""].filter(Boolean).join(" ");
 
   return (
     <div className="app">
@@ -46,11 +44,7 @@ export function Shell() {
         <div className={shellClass}>
           <Sidebar mobileOpen={mobileOpen} onNavigate={() => setMobileOpen(false)} />
           <div className="main-wrap">
-            <button
-              className="menu-btn"
-              aria-label="Меню"
-              onClick={() => setMobileOpen(true)}
-            >
+            <button className="menu-btn" aria-label="Меню" onClick={() => setMobileOpen(true)}>
               ☰
             </button>
             <main className="main">

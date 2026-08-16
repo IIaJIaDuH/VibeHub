@@ -44,7 +44,12 @@ export function CategoryStrip({ items, value, onChange }: CategoryStripProps) {
   return (
     <div className={styles.wrap}>
       {canLeft ? (
-        <button type="button" className={styles.arrow} aria-label="Назад" onClick={() => scroll(-1)}>
+        <button
+          type="button"
+          className={styles.arrow}
+          aria-label="Назад"
+          onClick={() => scroll(-1)}
+        >
           <IconChevron width={16} height={16} style={{ transform: "rotate(180deg)" }} />
         </button>
       ) : null}
@@ -63,7 +68,12 @@ export function CategoryStrip({ items, value, onChange }: CategoryStripProps) {
         ))}
       </div>
       {canRight ? (
-        <button type="button" className={`${styles.arrow} ${styles.right}`} aria-label="Дальше" onClick={() => scroll(1)}>
+        <button
+          type="button"
+          className={`${styles.arrow} ${styles.right}`}
+          aria-label="Дальше"
+          onClick={() => scroll(1)}
+        >
           <IconChevron width={16} height={16} />
         </button>
       ) : null}

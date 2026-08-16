@@ -1,9 +1,4 @@
-import {
-  createRootRoute,
-  createRoute,
-  createRouter,
-  redirect,
-} from "@tanstack/react-router";
+import { createRootRoute, createRoute, createRouter, redirect } from "@tanstack/react-router";
 import { Shell } from "./App";
 import { EntityPage } from "./features/entities/EntityPage";
 import { BenchmarksPage } from "./pages/Benchmarks/Benchmarks";

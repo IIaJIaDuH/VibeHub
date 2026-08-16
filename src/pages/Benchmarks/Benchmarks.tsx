@@ -18,9 +18,7 @@ const FILTERS: { id: "all" | BenchmarkCategory; label: string }[] = [
 export function BenchmarksPage() {
   const [category, setCategory] = useState<(typeof FILTERS)[number]["id"]>("all");
 
-  const rows = BENCHMARKS.filter(
-    (row) => category === "all" || row.category === category,
-  );
+  const rows = BENCHMARKS.filter((row) => category === "all" || row.category === category);
 
   return (
     <div className={styles.page}>
@@ -31,9 +29,7 @@ export function BenchmarksPage() {
           onChange={(id) => setCategory(id as typeof category)}
         />
         <div className={styles.secondary}>
-          <p className={styles.legend}>
-            Score — проверенный результат внешнего теста
-          </p>
+          <p className={styles.legend}>Score — проверенный результат внешнего теста</p>
         </div>
       </PageHeader>
 
@@ -42,7 +38,8 @@ export function BenchmarksPage() {
           <div className={styles.emptyContent}>
             <h3>Бенчмарки пока не подключены</h3>
             <p>
-              Позже здесь появятся независимые данные из внешних бенчмарков (SWE-bench, LiveCodeBench, SimpleQA).
+              Позже здесь появятся независимые данные из внешних бенчмарков (SWE-bench,
+              LiveCodeBench, SimpleQA).
             </p>
           </div>
         </EmptyState>

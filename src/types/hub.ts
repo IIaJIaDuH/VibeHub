@@ -2,28 +2,13 @@ import type { ContentSpan } from "./entities";
 
 export type { CatalogKind, ContentSpan, EntityKind, EntityRef } from "./entities";
 
-export type Route =
-  | "models"
-  | "tools"
-  | "benchmarks"
-  | "bookmarks"
-  | "collections";
+export type Route = "models" | "tools" | "benchmarks" | "bookmarks" | "collections";
 
-export type ToolCategory =
-  | "coding"
-  | "agents"
-  | "research"
-  | "design"
-  | "local-ai";
+export type ToolCategory = "coding" | "agents" | "research" | "design" | "local-ai";
 
 export type ToolType = "skill" | "mcp" | "plugin" | "cli" | "ide";
 
-export type BenchmarkCategory =
-  | "coding"
-  | "reasoning"
-  | "research"
-  | "vision"
-  | "speed";
+export type BenchmarkCategory = "coding" | "reasoning" | "research" | "vision" | "speed";
 
 export * from "./models";
 export * from "./collections";

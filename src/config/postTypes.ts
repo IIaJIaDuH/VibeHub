@@ -76,7 +76,5 @@ export function postTypeConfig(type: PostType) {
 
 export function questionStatus(post: { type: PostType; solved?: boolean }) {
   if (post.type !== "question") return null;
-  return post.solved
-    ? { mark: "✓", label: "Решено" }
-    : { mark: "?", label: "Вопрос" };
+  return post.solved ? { mark: "✓", label: "Решено" } : { mark: "?", label: "Вопрос" };
 }

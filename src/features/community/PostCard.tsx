@@ -8,13 +8,7 @@ import { describePost, isSaved } from "../../services/saved";
 import { postTypeConfig, questionStatus } from "./postTypes";
 import styles from "./PostCard.module.css";
 
-export function PostCard({
-  post,
-  compact = false,
-}: {
-  post: Post;
-  compact?: boolean;
-}) {
+export function PostCard({ post, compact = false }: { post: Post; compact?: boolean }) {
   const { mentionEntities, acceptAnswer, addComment, savedItems, toggleSavedTarget } = useHub();
   const status = questionStatus(post);
   const kind = postTypeConfig(post.type);
@@ -113,11 +107,7 @@ function CommentForm({ onSubmit }: { onSubmit: (text: string) => void }) {
         setText("");
       }}
     >
-      <input
-        value={text}
-        placeholder="Ответ"
-        onChange={(e) => setText(e.target.value)}
-      />
+      <input value={text} placeholder="Ответ" onChange={(e) => setText(e.target.value)} />
     </form>
   );
 }

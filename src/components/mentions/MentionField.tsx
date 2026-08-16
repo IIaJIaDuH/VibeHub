@@ -24,9 +24,7 @@ export function MentionField({
   const [active, setActive] = useState(0);
   const area = useRef<HTMLTextAreaElement>(null);
   const query = atQuery(value, caret);
-  const suggestions = query
-    ? filterEntities(query.query, mentionEntities).slice(0, 8)
-    : [];
+  const suggestions = query ? filterEntities(query.query, mentionEntities).slice(0, 8) : [];
 
   useEffect(() => {
     setActive(0);
@@ -47,11 +45,7 @@ export function MentionField({
   return (
     <div style={{ position: "relative" }}>
       {query && suggestions.length > 0 ? (
-        <MentionAutocomplete
-          items={suggestions}
-          active={active}
-          onPick={insert}
-        />
+        <MentionAutocomplete items={suggestions} active={active} onPick={insert} />
       ) : null}
       <textarea
         ref={area}

@@ -6,12 +6,7 @@ interface CardProps extends HTMLAttributes<HTMLElement> {
   padded?: boolean;
 }
 
-export function Card({
-  as: Tag = "article",
-  padded = true,
-  className = "",
-  ...props
-}: CardProps) {
+export function Card({ as: Tag = "article", padded = true, className = "", ...props }: CardProps) {
   return (
     <Tag
       className={`${styles.card} ${padded ? styles.padded : ""} ${className}`.trim()}

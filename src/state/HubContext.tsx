@@ -24,13 +24,7 @@ import {
 import { fromBookmarks, isSaved, toggleSaved } from "../services/saved";
 import { localStorageDriver, STORAGE_KEYS } from "../services/storage/localStorageDriver";
 import type { CatalogKind, EntityKind, EntityRef } from "../types/entities";
-import type {
-  ChatChannelId,
-  ChatMessage,
-  Model,
-  Route,
-  Tool,
-} from "../types/hub";
+import type { ChatChannelId, ChatMessage, Model, Route, Tool } from "../types/hub";
 import type { CreatePostInput, Post } from "../types/posts";
 import type { SavedItem } from "../types/saved";
 import { entityFromPath, entityPath, routeFromPath, type EntityView } from "./routing";
@@ -122,9 +116,7 @@ export function HubProvider({ children }: { children: ReactNode }) {
       const data = await modelsService.getModels({ forceRefresh });
       setModels(data);
     } catch (err) {
-      setModelsError(
-        err instanceof Error ? err.message : "Не удалось загрузить каталог моделей",
-      );
+      setModelsError(err instanceof Error ? err.message : "Не удалось загрузить каталог моделей");
     } finally {
       setModelsLoading(false);
     }
@@ -134,10 +126,7 @@ export function HubProvider({ children }: { children: ReactNode }) {
     fetchModels();
   }, [fetchModels]);
 
-  const mentionEntities = useMemo(
-    () => mentionIndex(models, tools),
-    [models, tools],
-  );
+  const mentionEntities = useMemo(() => mentionIndex(models, tools), [models, tools]);
 
   const setRoute = useCallback(
     (next: Route) => {
@@ -196,9 +185,7 @@ export function HubProvider({ children }: { children: ReactNode }) {
 
   const syncBookmark = useCallback((kind: CatalogKind, id: string, on: boolean) => {
     if (kind === "tool") {
-      setTools((prev) =>
-        prev.map((item) => (item.id === id ? { ...item, bookmarked: on } : item)),
-      );
+      setTools((prev) => prev.map((item) => (item.id === id ? { ...item, bookmarked: on } : item)));
     }
   }, []);
 
@@ -311,6 +298,7 @@ export function HubProvider({ children }: { children: ReactNode }) {
       messages,
       entityView,
       setRoute,
+      setEntityView,
       setSidebarCollapsed,
       setChatOpen,
       sendMessage,

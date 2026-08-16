@@ -5,25 +5,12 @@ import { RichText } from "../mentions/RichText";
 import { MentionField } from "../mentions/MentionField";
 import { useHub } from "../../state/HubContext";
 import type { ChatMessage, EntityRef } from "../../types/hub";
-import {
-  IconBookmark,
-  IconChevron,
-  IconClose,
-  IconPlus,
-  IconReply,
-  IconSend,
-} from "../icons";
+import { IconBookmark, IconChevron, IconClose, IconPlus, IconReply, IconSend } from "../icons";
 import styles from "./ChatPanel.module.css";
 
 export function ChatPanel() {
-  const {
-    mentionEntities,
-    chatChannel,
-    setChatChannel,
-    messages,
-    sendMessage,
-    setChatOpen,
-  } = useHub();
+  const { mentionEntities, chatChannel, setChatChannel, messages, sendMessage, setChatOpen } =
+    useHub();
   const channel = CHAT_CHANNELS.find((c) => c.id === chatChannel)!;
   const list = messages.filter((m) => m.channelId === chatChannel);
   const scroller = useRef<HTMLDivElement>(null);
@@ -35,11 +22,7 @@ export function ChatPanel() {
   return (
     <aside className={styles.panel} aria-label="Чат сообщества">
       <header className={styles.header}>
-        <ChannelMenu
-          label={channel.label}
-          current={chatChannel}
-          onChange={setChatChannel}
-        />
+        <ChannelMenu label={channel.label} current={chatChannel} onChange={setChatChannel} />
         <button
           type="button"
           className={styles.iconBtn}
@@ -61,11 +44,7 @@ export function ChatPanel() {
           </div>
         ) : (
           list.map((message) => (
-            <ChatRow
-              key={message.id}
-              message={message}
-              entities={mentionEntities}
-            />
+            <ChatRow key={message.id} message={message} entities={mentionEntities} />
           ))
         )}
       </div>
@@ -118,13 +97,7 @@ function ChannelMenu({
   );
 }
 
-function ChatRow({
-  message,
-  entities,
-}: {
-  message: ChatMessage;
-  entities: EntityRef[];
-}) {
+function ChatRow({ message, entities }: { message: ChatMessage; entities: EntityRef[] }) {
   return (
     <article className={styles.msg}>
       <span className={styles.avatar} aria-hidden>

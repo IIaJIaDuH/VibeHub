@@ -94,9 +94,7 @@ function EntityPageView({
 }) {
   const tabs = ENTITY_TABS[kind];
   const [tab, setTab] = useState(tabs[0].id);
-  const rows = model
-    ? BENCHMARKS.filter((row) => row.modelId === model.id)
-    : [];
+  const rows = model ? BENCHMARKS.filter((row) => row.modelId === model.id) : [];
 
   const tabPosts =
     tab === "guides"
@@ -163,9 +161,7 @@ function EntityPageView({
                   <p className={`${styles.specValue} ${styles.specValueMono}`}>
                     {model.contextWindow}
                   </p>
-                  <p className={styles.specSub}>
-                    {model.contextLength.toLocaleString()} токенов
-                  </p>
+                  <p className={styles.specSub}>{model.contextLength.toLocaleString()} токенов</p>
                 </div>
 
                 <div className={styles.specCard}>
@@ -197,13 +193,9 @@ function EntityPageView({
 
                 <div className={styles.specCard}>
                   <h3 className={styles.specTitle}>Модальность</h3>
-                  <p className={styles.specValue}>
-                    {model.architecture?.modality || "text->text"}
-                  </p>
+                  <p className={styles.specValue}>{model.architecture?.modality || "text->text"}</p>
                   {model.architecture?.tokenizer ? (
-                    <p className={styles.specSub}>
-                      Токенизатор: {model.architecture.tokenizer}
-                    </p>
+                    <p className={styles.specSub}>Токенизатор: {model.architecture.tokenizer}</p>
                   ) : null}
                 </div>
 
@@ -236,9 +228,7 @@ function EntityPageView({
                     </a>
                   </p>
                   {model.releaseDate ? (
-                    <p className={styles.specSub}>
-                      Добавлено: {model.releaseDate}
-                    </p>
+                    <p className={styles.specSub}>Добавлено: {model.releaseDate}</p>
                   ) : null}
                 </div>
               </div>
@@ -280,9 +270,7 @@ function EntityPageView({
         </section>
       ) : null}
 
-      {tab === "discussions" || tab === "guides" ? (
-        <RelatedPosts posts={tabPosts} />
-      ) : null}
+      {tab === "discussions" || tab === "guides" ? <RelatedPosts posts={tabPosts} /> : null}
     </div>
   );
 }

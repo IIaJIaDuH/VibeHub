@@ -212,10 +212,7 @@ export class LocalStorageCollectionsRepository implements CollectionsRepository 
     return true;
   }
 
-  async addItem(
-    collectionId: string,
-    input: CreateCollectionItemInput,
-  ): Promise<CollectionItem> {
+  async addItem(collectionId: string, input: CreateCollectionItemInput): Promise<CollectionItem> {
     const all = this.loadAll();
     const collection = all.find((c) => c.id === collectionId);
     if (!collection) {

@@ -14,11 +14,7 @@ function formatItemsCount(count: number): string {
   if (count % 10 === 1 && count % 100 !== 11) {
     return `${count} сайт`;
   }
-  if (
-    count % 10 >= 2 &&
-    count % 10 <= 4 &&
-    (count % 100 < 10 || count % 100 >= 20)
-  ) {
+  if (count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 >= 20)) {
     return `${count} сайта`;
   }
   return `${count} сайтов`;
@@ -46,27 +42,18 @@ export function CollectionsPage() {
     fromCollectionId: string;
   } | null>(null);
 
-  const handleAddSite = async (
-    collectionId: string,
-    input: CreateCollectionItemInput,
-  ) => {
+  const handleAddSite = async (collectionId: string, input: CreateCollectionItemInput) => {
     await addItem(collectionId, input);
     setAddSiteModalOpen(false);
   };
 
-  const handleCreateCollection = async (input: {
-    name: string;
-    description?: string;
-  }) => {
+  const handleCreateCollection = async (input: { name: string; description?: string }) => {
     const created = await createCollection(input);
     setCreateModalOpen(false);
     setActiveCollectionId(created.id);
   };
 
-  const handleEditCollection = async (input: {
-    name: string;
-    description?: string;
-  }) => {
+  const handleEditCollection = async (input: { name: string; description?: string }) => {
     if (!activeCollectionId) return;
     await updateCollection(activeCollectionId, input);
     setEditColModalOpen(false);
@@ -84,11 +71,7 @@ export function CollectionsPage() {
 
   const handleMoveSite = async (toCollectionId: string) => {
     if (!moveModalItem) return;
-    await moveItem(
-      moveModalItem.fromCollectionId,
-      toCollectionId,
-      moveModalItem.item.id,
-    );
+    await moveItem(moveModalItem.fromCollectionId, toCollectionId, moveModalItem.item.id);
     setMoveModalItem(null);
   };
 
@@ -113,22 +96,13 @@ export function CollectionsPage() {
               ) : null}
             </div>
             <div className={styles.detailActions}>
-              <Button
-                variant="primary"
-                onClick={() => setAddSiteModalOpen(true)}
-              >
+              <Button variant="primary" onClick={() => setAddSiteModalOpen(true)}>
                 + Добавить сайт
               </Button>
-              <Button
-                variant="ghost"
-                onClick={() => setEditColModalOpen(true)}
-              >
+              <Button variant="ghost" onClick={() => setEditColModalOpen(true)}>
                 Редактировать
               </Button>
-              <Button
-                variant="text"
-                onClick={handleDeleteActiveCollection}
-              >
+              <Button variant="text" onClick={handleDeleteActiveCollection}>
                 Удалить
               </Button>
             </div>
@@ -138,10 +112,7 @@ export function CollectionsPage() {
         {activeCollection.items.length === 0 ? (
           <div className={styles.emptyBlock}>
             <p>В этой коллекции пока нет сохраненных сайтов.</p>
-            <Button
-              variant="ghost"
-              onClick={() => setAddSiteModalOpen(true)}
-            >
+            <Button variant="ghost" onClick={() => setAddSiteModalOpen(true)}>
               + Добавить первый сайт
             </Button>
           </div>
@@ -239,15 +210,11 @@ export function CollectionsPage() {
                   <div className={styles.cardHead}>
                     <h3 className={styles.cardTitle}>{col.name}</h3>
                   </div>
-                  {col.description ? (
-                    <p className={styles.cardDesc}>{col.description}</p>
-                  ) : null}
+                  {col.description ? <p className={styles.cardDesc}>{col.description}</p> : null}
                 </div>
 
                 <div className={styles.cardFooter}>
-                  <span className={styles.cardCount}>
-                    {formatItemsCount(col.items.length)}
-                  </span>
+                  <span className={styles.cardCount}>{formatItemsCount(col.items.length)}</span>
                   <div className={styles.cardPreviews}>
                     {col.items.slice(0, 4).map((item) => (
                       <SitePreviewIcon key={item.id} item={item} />
@@ -330,9 +297,7 @@ function SiteRow({
           {item.title} ↗
         </a>
         <span className={styles.siteDomain}>{item.domain}</span>
-        {item.description ? (
-          <p className={styles.siteNote}>{item.description}</p>
-        ) : null}
+        {item.description ? <p className={styles.siteNote}>{item.description}</p> : null}
       </div>
 
       <div className={styles.siteActions}>

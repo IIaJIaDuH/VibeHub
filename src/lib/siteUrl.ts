@@ -4,9 +4,7 @@ export function faviconFor(domain: string) {
 
 export function guessTitle(domain: string) {
   const host = domain.split(".")[0] ?? domain;
-  return host
-    .replace(/[-_]+/g, " ")
-    .replace(/\b\w/g, (ch) => ch.toUpperCase());
+  return host.replace(/[-_]+/g, " ").replace(/\b\w/g, (ch) => ch.toUpperCase());
 }
 
 export function parseSiteUrl(raw: string) {
