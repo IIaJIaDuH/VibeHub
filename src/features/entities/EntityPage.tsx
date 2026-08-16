@@ -13,8 +13,16 @@ import { ENTITY_TABS } from "./entityTabs";
 import { RelatedPosts } from "./RelatedPosts";
 
 export function EntityPage() {
-  const { entityView, models, tools, posts, savedItems, setEntityView, toggleSavedTarget } =
-    useHub();
+  const {
+    entityView,
+    models,
+    modelsLoading,
+    tools,
+    posts,
+    savedItems,
+    setEntityView,
+    toggleSavedTarget,
+  } = useHub();
 
   if (!entityView || (entityView.kind !== "model" && entityView.kind !== "tool")) {
     return null;
@@ -24,7 +32,22 @@ export function EntityPage() {
   const model = kind === "model" ? models.find((m) => m.id === entityView.id) : undefined;
   const tool = kind === "tool" ? tools.find((t) => t.id === entityView.id) : undefined;
   const title = model?.name ?? tool?.name;
-  if (!title) return null;
+
+  if (!title) {
+    const loading = kind === "model" && modelsLoading;
+    return (
+      <div className={styles.page}>
+        <button type="button" className={styles.back} onClick={() => setEntityView(null)}>
+          ← К списку
+        </button>
+        <p className={styles.descriptionEmpty}>
+          {loading
+            ? "Загружаем каталог моделей…"
+            : "Сущность не найдена. Возможно, ссылка устарела."}
+        </p>
+      </div>
+    );
+  }
 
   const saved = isSaved(savedItems, kind, entityView.id);
 

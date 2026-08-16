@@ -1,27 +1,14 @@
 import { useEffect, useState } from "react";
+import { Outlet } from "@tanstack/react-router";
 import { ShareDialog } from "./features/share/ShareDialog";
-import { EntityPage } from "./features/entities/EntityPage";
 import { ChatPanel } from "./components/ChatPanel/ChatPanel";
 import { CommandPalette } from "./components/CommandPalette/CommandPalette";
 import { IconChat } from "./components/icons";
 import { Sidebar } from "./components/Sidebar/Sidebar";
-import { BenchmarksPage } from "./pages/Benchmarks/Benchmarks";
-import { BookmarksPage, CollectionsPage } from "./pages/Library/Library";
-import { ModelsPage } from "./pages/Models/Models";
-import { ToolsPage } from "./pages/Tools/Tools";
-import { HubProvider, useHub } from "./state/HubContext";
+import { useHub } from "./state/HubContext";
 
-export default function App() {
-  return (
-    <HubProvider>
-      <Shell />
-    </HubProvider>
-  );
-}
-
-function Shell() {
-  const { route, sidebarCollapsed, searchOpen, setSearchOpen, chatOpen, setChatOpen, entityView } =
-    useHub();
+export function Shell() {
+  const { sidebarCollapsed, searchOpen, setSearchOpen, chatOpen, setChatOpen } = useHub();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
@@ -67,17 +54,7 @@ function Shell() {
               ☰
             </button>
             <main className="main">
-              {entityView ? (
-                <EntityPage />
-              ) : (
-                <>
-                  {route === "models" ? <ModelsPage /> : null}
-                  {route === "tools" ? <ToolsPage /> : null}
-                  {route === "benchmarks" ? <BenchmarksPage /> : null}
-                  {route === "bookmarks" ? <BookmarksPage /> : null}
-                  {route === "collections" ? <CollectionsPage /> : null}
-                </>
-              )}
+              <Outlet />
             </main>
             {chatOpen ? null : (
               <button
