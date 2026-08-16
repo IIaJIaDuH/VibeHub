@@ -17,14 +17,18 @@ export function mentionIndex(models: Model[], tools: Tool[]): EntityRef[] {
     id: a.handle,
     name: a.name,
   }));
-  return [...catalogIndex(models, tools), ...users].sort((a, b) => b.name.length - a.name.length);
+  return [...catalogIndex(models, tools), ...users].sort(
+    (a, b) => b.name.length - a.name.length,
+  );
 }
 
 export function filterEntities(query: string, entities: EntityRef[]): EntityRef[] {
   const q = query.trim().toLowerCase();
   if (!q) return entities;
   return entities.filter(
-    (e) => e.name.toLowerCase().includes(q) || e.id.toLowerCase().includes(q.replace(/\s+/g, "-")),
+    (e) =>
+      e.name.toLowerCase().includes(q) ||
+      e.id.toLowerCase().includes(q.replace(/\s+/g, "-")),
   );
 }
 

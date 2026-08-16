@@ -146,7 +146,11 @@ export function AddWebsiteModal({
             <Button variant="text" onClick={onClose} type="button">
               Отмена
             </Button>
-            <Button variant="primary" disabled={!parsed || !targetCollectionId} type="submit">
+            <Button
+              variant="primary"
+              disabled={!parsed || !targetCollectionId}
+              type="submit"
+            >
               Добавить сайт
             </Button>
           </div>

@@ -11,7 +11,9 @@ export function parseSpans(text: string, entities: EntityRef[]): ContentSpan[] {
     }
     if (at > i) parts.push({ type: "text", value: text.slice(i, at) });
     const rest = text.slice(at + 1);
-    const hit = entities.find((e) => rest.toLowerCase().startsWith(e.name.toLowerCase()));
+    const hit = entities.find((e) =>
+      rest.toLowerCase().startsWith(e.name.toLowerCase()),
+    );
     if (hit) {
       parts.push({ type: "mention", entity: hit });
       i = at + 1 + hit.name.length;

@@ -37,11 +37,14 @@ export function useCollections() {
     return created;
   }, []);
 
-  const updateCollection = useCallback(async (id: string, input: UpdateCollectionInput) => {
-    const updated = await collectionsRepository.updateCollection(id, input);
-    setCollections((prev) => prev.map((c) => (c.id === id ? updated : c)));
-    return updated;
-  }, []);
+  const updateCollection = useCallback(
+    async (id: string, input: UpdateCollectionInput) => {
+      const updated = await collectionsRepository.updateCollection(id, input);
+      setCollections((prev) => prev.map((c) => (c.id === id ? updated : c)));
+      return updated;
+    },
+    [],
+  );
 
   const deleteCollection = useCallback(
     async (id: string) => {
@@ -57,24 +60,35 @@ export function useCollections() {
     [activeCollectionId],
   );
 
-  const addItem = useCallback(async (collectionId: string, item: CreateCollectionItemInput) => {
-    const newItem = await collectionsRepository.addItem(collectionId, item);
-    setCollections((prev) =>
-      prev.map((col) => {
-        if (col.id !== collectionId) return col;
-        return {
-          ...col,
-          updatedAt: new Date().toISOString(),
-          items: [newItem, ...col.items],
-        };
-      }),
-    );
-    return newItem;
-  }, []);
+  const addItem = useCallback(
+    async (collectionId: string, item: CreateCollectionItemInput) => {
+      const newItem = await collectionsRepository.addItem(collectionId, item);
+      setCollections((prev) =>
+        prev.map((col) => {
+          if (col.id !== collectionId) return col;
+          return {
+            ...col,
+            updatedAt: new Date().toISOString(),
+            items: [newItem, ...col.items],
+          };
+        }),
+      );
+      return newItem;
+    },
+    [],
+  );
 
   const updateItem = useCallback(
-    async (collectionId: string, itemId: string, changes: Partial<CollectionItem>) => {
-      const updatedItem = await collectionsRepository.updateItem(collectionId, itemId, changes);
+    async (
+      collectionId: string,
+      itemId: string,
+      changes: Partial<CollectionItem>,
+    ) => {
+      const updatedItem = await collectionsRepository.updateItem(
+        collectionId,
+        itemId,
+        changes,
+      );
       setCollections((prev) =>
         prev.map((col) => {
           if (col.id !== collectionId) return col;
@@ -90,25 +104,32 @@ export function useCollections() {
     [],
   );
 
-  const removeItem = useCallback(async (collectionId: string, itemId: string) => {
-    const success = await collectionsRepository.removeItem(collectionId, itemId);
-    if (success) {
-      setCollections((prev) =>
-        prev.map((col) => {
-          if (col.id !== collectionId) return col;
-          return {
-            ...col,
-            updatedAt: new Date().toISOString(),
-            items: col.items.filter((it) => it.id !== itemId),
-          };
-        }),
-      );
-    }
-    return success;
-  }, []);
+  const removeItem = useCallback(
+    async (collectionId: string, itemId: string) => {
+      const success = await collectionsRepository.removeItem(collectionId, itemId);
+      if (success) {
+        setCollections((prev) =>
+          prev.map((col) => {
+            if (col.id !== collectionId) return col;
+            return {
+              ...col,
+              updatedAt: new Date().toISOString(),
+              items: col.items.filter((it) => it.id !== itemId),
+            };
+          }),
+        );
+      }
+      return success;
+    },
+    [],
+  );
 
   const moveItem = useCallback(
-    async (fromCollectionId: string, toCollectionId: string, itemId: string) => {
+    async (
+      fromCollectionId: string,
+      toCollectionId: string,
+      itemId: string,
+    ) => {
       const success = await collectionsRepository.moveItem(
         fromCollectionId,
         toCollectionId,

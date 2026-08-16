@@ -50,7 +50,10 @@ export function ToolsPage() {
         <div className={styles.secondary}>
           <label className={styles.type}>
             Тип
-            <select value={type} onChange={(e) => setType(e.target.value as typeof type)}>
+            <select
+              value={type}
+              onChange={(e) => setType(e.target.value as typeof type)}
+            >
               {TYPES.map((item) => (
                 <option key={item.id} value={item.id}>
                   {item.label}
@@ -129,7 +132,9 @@ function ToolRow({
           {tool.tags.map((tag) => (
             <span key={tag}> · {tag}</span>
           ))}
-          {tool.compatibility.length > 0 ? <span> · {tool.compatibility.join(" · ")}</span> : null}
+          {tool.compatibility.length > 0 ? (
+            <span> · {tool.compatibility.join(" · ")}</span>
+          ) : null}
         </p>
       </div>
       <div

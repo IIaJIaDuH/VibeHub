@@ -179,10 +179,7 @@ const ModelRow = memo(function ModelRow({
         <h2>{model.name}</h2>
         <p className={styles.provider}>{model.provider}</p>
         <div className={styles.metaRow}>
-          <span
-            className={styles.ctx}
-            title={`Контекст: ${model.contextLength.toLocaleString()} токенов`}
-          >
+          <span className={styles.ctx} title={`Контекст: ${model.contextLength.toLocaleString()} токенов`}>
             {model.contextWindow} ctx
           </span>
           <span
@@ -191,9 +188,7 @@ const ModelRow = memo(function ModelRow({
           >
             {model.pricing.formattedSummary}
           </span>
-          {hasReasoning ? (
-            <span className={`${styles.tag} ${styles.tagReasoning}`}>Reasoning</span>
-          ) : null}
+          {hasReasoning ? <span className={`${styles.tag} ${styles.tagReasoning}`}>Reasoning</span> : null}
           {hasVision ? <span className={`${styles.tag} ${styles.tagVision}`}>Vision</span> : null}
           {hasTools ? <span className={`${styles.tag} ${styles.tagTools}`}>Tools</span> : null}
           {hasAudio ? <span className={`${styles.tag} ${styles.tagAudio}`}>Audio</span> : null}

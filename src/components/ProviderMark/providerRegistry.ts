@@ -52,7 +52,11 @@ const PROVIDER_ALIASES: Record<string, string> = {
  */
 export function normalizeProviderId(rawId?: string): string {
   if (!rawId) return "";
-  const cleaned = rawId.toLowerCase().trim().replace(/^~/, "").replace(/_/g, "-");
+  const cleaned = rawId
+    .toLowerCase()
+    .trim()
+    .replace(/^~/, "")
+    .replace(/_/g, "-");
   return PROVIDER_ALIASES[cleaned] || cleaned;
 }
 

@@ -57,7 +57,9 @@ export function Select({
 
   // Normalize options array
   const options: SelectOption[] = useMemo(() => {
-    return rawOptions.map((opt) => (typeof opt === "string" ? { value: opt, label: opt } : opt));
+    return rawOptions.map((opt) =>
+      typeof opt === "string" ? { value: opt, label: opt } : opt,
+    );
   }, [rawOptions]);
 
   // Selected option
@@ -111,7 +113,10 @@ export function Select({
   useEffect(() => {
     if (!isOpen) return;
     const handleOutsideClick = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         closeDropdown();
       }
     };
@@ -158,10 +163,14 @@ export function Select({
 
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setFocusedIndex((prev) => (prev < filteredOptions.length - 1 ? prev + 1 : 0));
+      setFocusedIndex((prev) =>
+        prev < filteredOptions.length - 1 ? prev + 1 : 0,
+      );
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setFocusedIndex((prev) => (prev > 0 ? prev - 1 : filteredOptions.length - 1));
+      setFocusedIndex((prev) =>
+        prev > 0 ? prev - 1 : filteredOptions.length - 1,
+      );
     } else if (e.key === "Enter") {
       e.preventDefault();
       if (focusedIndex >= 0 && focusedIndex < filteredOptions.length) {
@@ -200,7 +209,10 @@ export function Select({
         <span className={styles.triggerValue}>
           {selectedOption ? selectedOption.label : placeholder}
         </span>
-        <span className={`${styles.chevron} ${isOpen ? styles.chevronOpen : ""}`} aria-hidden>
+        <span
+          className={`${styles.chevron} ${isOpen ? styles.chevronOpen : ""}`}
+          aria-hidden
+        >
           <IconChevronDown width={14} height={14} />
         </span>
       </button>
@@ -256,7 +268,9 @@ export function Select({
                     onMouseEnter={() => setFocusedIndex(idx)}
                   >
                     <span className={styles.optionText}>
-                      {renderOption ? renderOption(opt, isSelected) : opt.label}
+                      {renderOption
+                        ? renderOption(opt, isSelected)
+                        : opt.label}
                     </span>
                     {isSelected ? (
                       <span className={styles.optionCheck} aria-hidden>

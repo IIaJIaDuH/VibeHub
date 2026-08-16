@@ -20,7 +20,11 @@ export interface CollectionsRepository {
     item: Partial<CollectionItem>,
   ): Promise<CollectionItem>;
   removeItem(collectionId: string, itemId: string): Promise<boolean>;
-  moveItem(fromCollectionId: string, toCollectionId: string, itemId: string): Promise<boolean>;
+  moveItem(
+    fromCollectionId: string,
+    toCollectionId: string,
+    itemId: string,
+  ): Promise<boolean>;
 }
 
 export interface QuickAccessRepository {

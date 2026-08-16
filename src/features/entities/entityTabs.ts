@@ -1,6 +1,9 @@
 import type { CatalogKind } from "../../types/entities";
 
-export const ENTITY_TABS: Record<CatalogKind, { id: string; label: string }[]> = {
+export const ENTITY_TABS: Record<
+  CatalogKind,
+  { id: string; label: string }[]
+> = {
   model: [
     { id: "overview", label: "Обзор" },
     { id: "benchmarks", label: "Бенчмарки" },

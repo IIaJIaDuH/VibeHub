@@ -8,7 +8,13 @@ interface RatingProps {
   onRate?: (stars: number) => void;
 }
 
-export function Rating({ value, votes, interactive, userValue, onRate }: RatingProps) {
+export function Rating({
+  value,
+  votes,
+  interactive,
+  userValue,
+  onRate,
+}: RatingProps) {
   return (
     <div className={styles.wrap}>
       {interactive ? (
@@ -17,7 +23,9 @@ export function Rating({ value, votes, interactive, userValue, onRate }: RatingP
             <button
               key={star}
               type="button"
-              className={`${styles.star} ${(userValue ?? 0) >= star ? styles.filled : ""}`}
+              className={`${styles.star} ${
+                (userValue ?? 0) >= star ? styles.filled : ""
+              }`}
               aria-label={`${star} из 5`}
               onClick={() => onRate?.(star)}
             >
@@ -28,7 +36,9 @@ export function Rating({ value, votes, interactive, userValue, onRate }: RatingP
       ) : (
         <span className={styles.value}>★ {value.toFixed(1)}</span>
       )}
-      {votes != null ? <span className={styles.votes}>{votes} голосов</span> : null}
+      {votes != null ? (
+        <span className={styles.votes}>{votes} голосов</span>
+      ) : null}
     </div>
   );
 }

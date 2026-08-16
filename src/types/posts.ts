@@ -1,7 +1,12 @@
 import type { EntityRef } from "./entities";
 import type { ChatAuthor } from "./hub";
 
-export type PostType = "discussion" | "question" | "project" | "guide" | "resource";
+export type PostType =
+  | "discussion"
+  | "question"
+  | "project"
+  | "guide"
+  | "resource";
 
 export interface PostComment {
   id: string;

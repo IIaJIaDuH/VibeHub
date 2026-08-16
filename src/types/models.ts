@@ -38,6 +38,17 @@ export interface Model {
   sourceUrl?: string;
 }
 
-export type ModelFilter = "all" | "vision" | "reasoning" | "tools" | "free";
+export type ModelFilter =
+  | "all"
+  | "vision"
+  | "reasoning"
+  | "tools"
+  | "free";
 
-export type ModelSort = "catalog" | "new" | "context-desc" | "context-asc" | "price-asc" | "name";
+export type ModelSort =
+  | "catalog"
+  | "new"
+  | "context-desc"
+  | "context-asc"
+  | "price-asc"
+  | "name";

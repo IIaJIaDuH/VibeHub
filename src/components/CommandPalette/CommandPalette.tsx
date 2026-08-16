@@ -21,7 +21,8 @@ function writeRecent(term: string) {
 }
 
 export function CommandPalette() {
-  const { searchOpen, setSearchOpen, models, tools, posts, openEntity, setAddOpen } = useHub();
+  const { searchOpen, setSearchOpen, models, tools, posts, openEntity, setAddOpen } =
+    useHub();
   const [q, setQ] = useState("");
   const [recent, setRecent] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);

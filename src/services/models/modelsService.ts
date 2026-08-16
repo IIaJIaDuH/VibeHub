@@ -64,12 +64,10 @@ export class ModelsService {
 
     // Currently takes primary provider, easily aggregates multiple when added
     const results = await Promise.all(
-      this.providers.map((p) =>
-        p.getModels(options).catch((err) => {
-          console.error(`Failed to fetch models from provider ${p.name}:`, err);
-          return [] as Model[];
-        }),
-      ),
+      this.providers.map((p) => p.getModels(options).catch((err) => {
+        console.error(`Failed to fetch models from provider ${p.name}:`, err);
+        return [] as Model[];
+      }))
     );
 
     const allModels = results.flat();

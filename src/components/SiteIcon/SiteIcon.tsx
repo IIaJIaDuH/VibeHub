@@ -39,11 +39,16 @@ export function SiteIcon({
     setHasError(false);
   }, [faviconUrl]);
 
-  const computedRadius = radius ?? (size < 24 ? 4 : size < 32 ? 6 : size <= 44 ? 10 : 12);
-  const computedIconSize = iconSize ?? (size <= 20 ? 14 : size <= 28 ? 16 : size <= 44 ? 22 : 24);
+  const computedRadius =
+    radius ?? (size < 24 ? 4 : size < 32 ? 6 : size <= 44 ? 10 : 12);
+  const computedIconSize =
+    iconSize ?? (size <= 20 ? 14 : size <= 28 ? 16 : size <= 44 ? 22 : 24);
   const fontSize = Math.max(9, Math.round(size * 0.32));
 
-  const monogram = (fallbackText || cleanDomain || "?").trim().slice(0, 2).toUpperCase();
+  const monogram = (fallbackText || cleanDomain || "?")
+    .trim()
+    .slice(0, 2)
+    .toUpperCase();
 
   const containerStyle = {
     width: size,

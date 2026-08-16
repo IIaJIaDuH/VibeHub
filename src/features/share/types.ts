@@ -10,4 +10,6 @@ export function emptyDraft(extras: Record<string, string> = {}): PostDraft {
   return { title: "", content: "", extras };
 }
 
-export type ShareView = { step: "selecting-type" } | { step: "composing"; type: PostType };
+export type ShareView =
+  | { step: "selecting-type" }
+  | { step: "composing"; type: PostType };

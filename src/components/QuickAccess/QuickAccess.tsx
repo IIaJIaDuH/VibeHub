@@ -95,7 +95,12 @@ function SiteTile({
 
   return (
     <div className={styles.tileWrap} ref={wrap}>
-      <a className={styles.tile} href={site.url} target="_blank" rel="noopener noreferrer">
+      <a
+        className={styles.tile}
+        href={site.url}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <SiteIcon
           src={site.favicon}
           domain={site.domain}
@@ -192,45 +197,45 @@ function SiteModal({
             submit();
           }}
         >
-          <label className={styles.field}>
-            Ссылка
-            <input
-              autoFocus
-              value={url}
-              placeholder="https://..."
-              onChange={(e) => {
-                setUrl(e.target.value);
-                if (!autoTitle) return;
-              }}
-            />
-          </label>
-          <label className={styles.field}>
-            Название
-            <input
-              value={title}
-              placeholder={parsed?.title ?? "Название"}
-              onChange={(e) => {
-                setAutoTitle(false);
-                setTitle(e.target.value);
-              }}
-            />
-          </label>
-          {parsed ? (
-            <p className={styles.hint}>
-              {parsed.domain}
-              {parsed.favicon ? " · favicon подставится автоматически" : ""}
-            </p>
-          ) : url.trim() ? (
-            <p className={styles.hint}>Проверьте ссылку</p>
-          ) : null}
-          <div className={styles.actions}>
-            <Button variant="text" onClick={onClose}>
-              Отмена
-            </Button>
-            <Button variant="primary" disabled={!parsed} type="submit">
-              {site ? "Сохранить" : "Добавить"}
-            </Button>
-          </div>
+        <label className={styles.field}>
+          Ссылка
+          <input
+            autoFocus
+            value={url}
+            placeholder="https://..."
+            onChange={(e) => {
+              setUrl(e.target.value);
+              if (!autoTitle) return;
+            }}
+          />
+        </label>
+        <label className={styles.field}>
+          Название
+          <input
+            value={title}
+            placeholder={parsed?.title ?? "Название"}
+            onChange={(e) => {
+              setAutoTitle(false);
+              setTitle(e.target.value);
+            }}
+          />
+        </label>
+        {parsed ? (
+          <p className={styles.hint}>
+            {parsed.domain}
+            {parsed.favicon ? " · favicon подставится автоматически" : ""}
+          </p>
+        ) : url.trim() ? (
+          <p className={styles.hint}>Проверьте ссылку</p>
+        ) : null}
+        <div className={styles.actions}>
+          <Button variant="text" onClick={onClose}>
+            Отмена
+          </Button>
+          <Button variant="primary" disabled={!parsed} type="submit">
+            {site ? "Сохранить" : "Добавить"}
+          </Button>
+        </div>
         </form>
       </div>
     </div>

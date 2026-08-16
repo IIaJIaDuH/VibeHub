@@ -17,7 +17,9 @@ export function toggleSaved(
   next: Omit<SavedItem, "id" | "savedAt">,
 ): SavedItem[] {
   if (isSaved(items, next.kind, next.targetId)) {
-    return items.filter((item) => !(item.kind === next.kind && item.targetId === next.targetId));
+    return items.filter(
+      (item) => !(item.kind === next.kind && item.targetId === next.targetId),
+    );
   }
   return [
     {
