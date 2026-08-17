@@ -2,12 +2,19 @@ import type { ContentSpan } from "./entities";
 
 export type { CatalogKind, ContentSpan, EntityKind, EntityRef } from "./entities";
 
+export * from "./profile";
+export * from "./saved";
+
 export type Route =
   | "models"
   | "tools"
   | "benchmarks"
+  | "saved"
   | "bookmarks"
-  | "collections";
+  | "collections"
+  | "profile"
+  | "feed"
+  | "people";
 
 export type ToolCategory =
   | "coding"

@@ -1,0 +1,63 @@
+.row {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 10px 14px;
+  margin: 2px -14px;
+  border-radius: var(--radius-lg, 12px);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background var(--ease), border-color var(--ease);
+}
+
+.row:hover {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+.row:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+  background: var(--surface);
+}
+
+.mark {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg, 12px);
+  background: var(--surface);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.body h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.summary {
+  margin: 4px 0 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.meta {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

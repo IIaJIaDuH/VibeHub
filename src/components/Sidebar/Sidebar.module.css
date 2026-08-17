@@ -9,8 +9,8 @@
   padding: 12px 10px 14px;
   border-right: 1px solid var(--border);
   background: var(--bg);
-  --nav-accent: #62b4e4;
-  transition: width 160ms ease;
+  --nav-accent: var(--accent);
+  transition: width var(--ease);
 }
 
 .collapsed:not(.mobileOpen) {
@@ -81,28 +81,30 @@
   color: var(--text);
 }
 
-.nav {
+.navWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  padding-right: 2px;
+}
+
+.group {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.library {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px solid var(--border);
-}
-
-.bottom {
-  margin-top: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding-top: 14px;
-  border-top: 1px solid var(--border);
+.groupTitle {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 6px 12px 2px;
+  user-select: none;
 }
 
 .link {
@@ -110,18 +112,20 @@
   align-items: center;
   gap: 14px;
   width: 100%;
-  min-height: 44px;
-  padding: 10px 12px;
+  min-height: 40px;
+  padding: 8px 12px;
   border-radius: 12px;
   color: var(--text-muted);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   text-align: left;
+  transition: all var(--ease);
 }
 
 .link svg {
   color: var(--text-dim);
   flex: 0 0 auto;
+  transition: color var(--ease);
 }
 
 .link:hover {
@@ -142,41 +146,101 @@
   color: var(--nav-accent);
 }
 
-.share {
-  margin-top: 8px;
+.bottom {
+  margin-top: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 6px 0;
+  border-top: 1px solid var(--border);
 }
 
-.share svg {
-  color: var(--text-dim);
-}
-
-.share:hover svg {
-  color: var(--nav-accent);
-}
-
-.user {
+.userBtn {
   display: flex;
   align-items: center;
   gap: 10px;
+  width: 100%;
   min-height: 48px;
   padding: 8px 10px;
   border-radius: 12px;
+  text-align: left;
+  cursor: pointer;
+  background: transparent;
+  transition: background var(--ease);
 }
 
-.user:hover {
+.userBtn:hover,
+.userBtn.menuOpen {
   background: var(--surface);
+}
+
+.loginBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 11px;
+  border: 1px solid transparent;
+  background: #D0CFCA;
+  color: #111214;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-align: center;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: background-color var(--ease), color var(--ease);
+}
+
+.loginBtn:hover {
+  background: #E7E5E0;
+  color: #111214;
+}
+
+.loginBtn:active {
+  background: #C4C3BE;
+}
+
+.loginBtn:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.4);
+  outline-offset: 2px;
+}
+
+.loginBtn:disabled {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-dim);
+  cursor: not-allowed;
 }
 
 .avatar {
   width: 32px;
   height: 32px;
   border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
   display: grid;
   place-items: center;
   flex: 0 0 auto;
-  border: 1px solid var(--border);
   font-size: 11px;
   font-weight: 600;
+  color: var(--text);
+  overflow: hidden;
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.userMeta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
 }
 
 .userMeta strong,
@@ -188,7 +252,9 @@
 }
 
 .userMeta strong {
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
 }
 
 .userMeta span {
@@ -196,18 +262,58 @@
   color: var(--text-dim);
 }
 
+.userChevron {
+  color: var(--text-dim);
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.collapsedLoginBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 0;
+  border-radius: 12px;
+  border: none;
+  color: var(--text-dim);
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--ease);
+}
+
+.collapsedLoginBtn:hover {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.collapsedLoginBtn:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.4);
+  outline-offset: 2px;
+}
+
+/* Collapsed styles */
 .collapsed:not(.mobileOpen) .brand,
 .collapsed:not(.mobileOpen) .link,
-.collapsed:not(.mobileOpen) .user {
+.collapsed:not(.mobileOpen) .userBtn,
+.collapsed:not(.mobileOpen) .collapsedLoginBtn {
   justify-content: center;
   padding-left: 0;
   padding-right: 0;
   gap: 0;
 }
 
+.collapsed:not(.mobileOpen) .bottom {
+  padding: 10px 0 0;
+}
+
 .collapsed:not(.mobileOpen) .vibe,
 .collapsed:not(.mobileOpen) .link span,
-.collapsed:not(.mobileOpen) .userMeta {
+.collapsed:not(.mobileOpen) .userMeta,
+.collapsed:not(.mobileOpen) .userChevron,
+.collapsed:not(.mobileOpen) .groupTitle {
   display: none;
 }
 

@@ -1,16 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { IconButton } from "../../components/IconButton/IconButton";
-import { IconBookmark } from "../../components/icons";
-import { ProviderMark } from "../../components/ProviderMark/ProviderMark";
-import { BENCHMARKS } from "../../data/benchmarks";
+import { IconBookmark, IconChevron } from "../../components/icons";
+import {
+  benchmarkService,
+  type ModelBenchmarkScore,
+  type ModelSpeedMetric,
+} from "../../services/benchmarks";
 import { postsForEntity } from "../../services/posts";
 import { isSaved } from "../../services/saved";
 import { useHub } from "../../state/HubContext";
 import type { CatalogKind } from "../../types/entities";
 import type { Model, Tool } from "../../types/hub";
-import styles from "./EntityPage.module.css";
 import { ENTITY_TABS } from "./entityTabs";
+import { ModelHeader } from "./components/ModelHeader";
 import { RelatedPosts } from "./RelatedPosts";
+import styles from "./EntityPage.module.css";
 
 export function EntityPage() {
   const {
@@ -92,9 +97,35 @@ function EntityPageView({
   onSave: () => void;
   saved: boolean;
 }) {
+  const navigate = useNavigate();
   const tabs = ENTITY_TABS[kind];
   const [tab, setTab] = useState(tabs[0].id);
-  const rows = model ? BENCHMARKS.filter((row) => row.modelId === model.id) : [];
+
+  const [benchmarkScores, setBenchmarkScores] = useState<ModelBenchmarkScore[]>([]);
+  const [speedMetric, setSpeedMetric] = useState<ModelSpeedMetric | null>(null);
+
+  useEffect(() => {
+    if (!model) return;
+    let isMounted = true;
+
+    Promise.all([
+      benchmarkService.getModelBenchmarkScores(model),
+      benchmarkService.getModelSpeed(model),
+    ])
+      .then(([scores, speed]) => {
+        if (isMounted) {
+          setBenchmarkScores(scores);
+          setSpeedMetric(speed);
+        }
+      })
+      .catch((err) => {
+        console.warn("Failed to load model benchmarks:", err);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [model]);
 
   const tabPosts =
     tab === "guides"
@@ -103,30 +134,37 @@ function EntityPageView({
         ? related.filter((p) => p.type === "discussion" || p.type === "question")
         : related;
 
+  const handleOpenBenchmark = (benchmarkId: string) => {
+    navigate({ to: `/benchmarks/${encodeURIComponent(benchmarkId)}` });
+  };
+
   return (
     <div className={styles.page}>
       <button type="button" className={styles.back} onClick={onBack}>
         ← К списку
       </button>
 
-      <header className={styles.head}>
-        <div className={styles.headMain}>
-          {model ? <ProviderMark model={model} size={48} /> : null}
-          <div>
-            <h1 className={styles.headTitle}>{title}</h1>
-            <p className={styles.headSubtitle}>{model?.provider ?? tool?.typeLabel}</p>
+      {model ? (
+        <ModelHeader model={model} saved={saved} onSave={onSave} />
+      ) : (
+        <header className={styles.toolHead}>
+          <div className={styles.toolHeadMain}>
+            <div>
+              <h1 className={styles.headTitle}>{title}</h1>
+              <p className={styles.headSubtitle}>{tool?.typeLabel}</p>
+            </div>
           </div>
-        </div>
-        <div className={styles.headActions}>
-          <IconButton
-            label={saved ? "Убрать из закладок" : "Сохранить"}
-            active={saved}
-            onClick={onSave}
-          >
-            <IconBookmark width={18} height={18} />
-          </IconButton>
-        </div>
-      </header>
+          <div className={styles.headActions}>
+            <IconButton
+              label={saved ? "Убрать из закладок" : "Сохранить"}
+              active={saved}
+              onClick={onSave}
+            >
+              <IconBookmark width={18} height={18} />
+            </IconButton>
+          </div>
+        </header>
+      )}
 
       <div className={styles.tabs}>
         {tabs.map((item) => (
@@ -143,135 +181,151 @@ function EntityPageView({
 
       {tab === "overview" ? (
         <section className={styles.block}>
-          {model ? (
+          {!model && tool ? (
             <>
-              <div className={styles.description}>
-                {model.description ? (
-                  <p>{model.description}</p>
-                ) : (
-                  <p className={styles.descriptionEmpty}>
-                    Описание модели отсутствует в спецификации провайдера.
-                  </p>
-                )}
+              <div className={styles.toolDescription}>
+                <p>{tool.summary ?? "Карточка инструмента в каталоге VibeHub."}</p>
               </div>
-
-              <div className={styles.specsGrid}>
-                <div className={styles.specCard}>
-                  <h3 className={styles.specTitle}>Контекстное окно</h3>
-                  <p className={`${styles.specValue} ${styles.specValueMono}`}>
-                    {model.contextWindow}
-                  </p>
-                  <p className={styles.specSub}>{model.contextLength.toLocaleString()} токенов</p>
+              <div className={styles.toolSpecsGrid}>
+                <div className={styles.toolSpecCard}>
+                  <h3 className={styles.toolSpecTitle}>Тип</h3>
+                  <p className={styles.toolSpecValue}>{tool.typeLabel}</p>
                 </div>
-
-                <div className={styles.specCard}>
-                  <h3 className={styles.specTitle}>Ценообразование</h3>
-                  <p className={`${styles.specValue} ${styles.specValueMono}`}>
-                    {model.pricing.formattedSummary}
-                  </p>
-                  <p className={styles.specSub}>
-                    {model.pricing.isFree
-                      ? "Бесплатный уровень (Free)"
-                      : `Prompt: $${model.pricing.promptPerMillion.toFixed(2)}/1M · Completion: $${model.pricing.completionPerMillion.toFixed(2)}/1M`}
-                  </p>
+                <div className={styles.toolSpecCard}>
+                  <h3 className={styles.toolSpecTitle}>Совместимость</h3>
+                  <p className={styles.toolSpecValue}>{tool.compatibility.join(" · ")}</p>
                 </div>
+              </div>
+            </>
+          ) : null}
 
-                <div className={styles.specCard}>
-                  <h3 className={styles.specTitle}>Возможности</h3>
-                  <div className={styles.badges}>
-                    {model.capabilities.length > 0 ? (
-                      model.capabilities.map((cap) => (
-                        <span key={cap} className={styles.badge}>
-                          {cap}
-                        </span>
-                      ))
-                    ) : (
-                      <span className={styles.specSub}>Стандартные (текст)</span>
-                    )}
+          {/* Benchmarks summary in Overview if present for this model */}
+          {model && benchmarkScores.length > 0 ? (
+            <div className={styles.overviewBenchmarks}>
+              <h3 className={styles.overviewSectionTitle}>Проверенные бенчмарки (BenchLM)</h3>
+              <div className={styles.benchmarkList}>
+                {benchmarkScores.slice(0, 6).map((score) => (
+                  <div
+                    key={score.benchmarkId}
+                    className={`${styles.benchmarkRow} ${styles.clickableRow}`}
+                    onClick={() => handleOpenBenchmark(score.benchmarkId)}
+                  >
+                    <div className={styles.benchmarkTitleGroup}>
+                      <span className={styles.benchmarkName}>{score.benchmarkName}</span>
+                      <span className={styles.benchmarkCategoryBadge}>{score.categoryLabel}</span>
+                    </div>
+                    <div className={styles.benchmarkScoreGroup}>
+                      <span className={styles.benchmarkScore}>{formatScore(score.score)}</span>
+                      <IconChevron width={14} height={14} className={styles.rowChevron} />
+                    </div>
                   </div>
-                </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
 
-                <div className={styles.specCard}>
-                  <h3 className={styles.specTitle}>Модальность</h3>
-                  <p className={styles.specValue}>{model.architecture?.modality || "text->text"}</p>
-                  {model.architecture?.tokenizer ? (
-                    <p className={styles.specSub}>Токенизатор: {model.architecture.tokenizer}</p>
-                  ) : null}
+          {/* Speed summary in Overview if present */}
+          {model && speedMetric ? (
+            <div className={styles.overviewBenchmarks}>
+              <h3 className={styles.overviewSectionTitle}>Скорость генерации (Inference Speed)</h3>
+              <div className={styles.speedGrid}>
+                <div className={styles.speedCard}>
+                  <span className={styles.speedCardLabel}>Пропускная способность</span>
+                  <span className={styles.speedCardValue}>
+                    {speedMetric.tokensPerSecond} <small>токенов/сек</small>
+                  </span>
                 </div>
-
-                {model.huggingFaceId ? (
-                  <div className={styles.specCard}>
-                    <h3 className={styles.specTitle}>Hugging Face</h3>
-                    <p className={styles.specValue}>
-                      <a
-                        href={`https://huggingface.co/${model.huggingFaceId}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={styles.link}
-                      >
-                        {model.huggingFaceId} ↗
-                      </a>
-                    </p>
+                {typeof speedMetric.ttft === "number" && !isNaN(speedMetric.ttft) ? (
+                  <div className={styles.speedCard}>
+                    <span className={styles.speedCardLabel}>Латентность (TTFT)</span>
+                    <span className={styles.speedCardValue}>
+                      {speedMetric.ttft.toFixed(2)}s
+                    </span>
                   </div>
                 ) : null}
+              </div>
+            </div>
+          ) : null}
 
-                <div className={styles.specCard}>
-                  <h3 className={styles.specTitle}>Первоисточник</h3>
-                  <p className={styles.specValue}>
-                    <a
-                      href={model.sourceUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={styles.link}
-                    >
-                      OpenRouter API ↗
-                    </a>
-                  </p>
-                  {model.releaseDate ? (
-                    <p className={styles.specSub}>Добавлено: {model.releaseDate}</p>
-                  ) : null}
-                </div>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className={styles.description}>
-                <p>{tool?.summary ?? "Карточка инструмента в каталоге VibeHub."}</p>
-              </div>
-              <div className={styles.specsGrid}>
-                <div className={styles.specCard}>
-                  <h3 className={styles.specTitle}>Тип</h3>
-                  <p className={styles.specValue}>{tool?.typeLabel}</p>
-                </div>
-                <div className={styles.specCard}>
-                  <h3 className={styles.specTitle}>Совместимость</h3>
-                  <p className={styles.specValue}>{tool?.compatibility.join(" · ")}</p>
-                </div>
-              </div>
-            </>
-          )}
-
-          <RelatedPosts posts={related} />
+          {/* Related posts in Overview only if they actually exist (no empty state) */}
+          {related.length > 0 ? (
+            <div className={styles.overviewSection}>
+              <h3 className={styles.overviewSectionTitle}>Связанные материалы</h3>
+              <RelatedPosts posts={related} />
+            </div>
+          ) : null}
         </section>
       ) : null}
 
       {tab === "benchmarks" ? (
         <section className={styles.block}>
-          {rows.length === 0 ? (
-            <p className={styles.row}>Нет проверенных бенчмарков для этой сущности.</p>
-          ) : (
-            rows.map((row) => (
-              <p key={row.id} className={styles.row}>
-                {row.benchmark} · {row.score}
-                {row.scoreMax ? `/${row.scoreMax}` : ""}
-              </p>
-            ))
-          )}
+          {speedMetric ? (
+            <div className={styles.speedSectionBox}>
+              <h3 className={styles.overviewSectionTitle}>Скорость работы модели</h3>
+              <div className={styles.speedGrid}>
+                <div className={styles.speedCard}>
+                  <span className={styles.speedCardLabel}>Пропускная способность</span>
+                  <span className={styles.speedCardValue}>
+                    {speedMetric.tokensPerSecond} <small>токенов/сек</small>
+                  </span>
+                </div>
+                {typeof speedMetric.ttft === "number" && !isNaN(speedMetric.ttft) ? (
+                  <div className={styles.speedCard}>
+                    <span className={styles.speedCardLabel}>Время до первого токена (TTFT)</span>
+                    <span className={styles.speedCardValue}>
+                      {speedMetric.ttft.toFixed(2)}s
+                    </span>
+                  </div>
+                ) : null}
+              </div>
+            </div>
+          ) : null}
+
+          {benchmarkScores.length === 0 && !speedMetric ? (
+            <p className={styles.emptyNotice}>
+              Для этой модели пока нет проверенных внешних бенчмарков в открытой базе.
+            </p>
+          ) : benchmarkScores.length > 0 ? (
+            <div>
+              <h3 className={styles.overviewSectionTitle}>
+                Результаты бенчмарков ({benchmarkScores.length})
+              </h3>
+              <div className={styles.benchmarkList}>
+                {benchmarkScores.map((score) => (
+                  <div
+                    key={score.benchmarkId}
+                    className={`${styles.benchmarkRow} ${styles.clickableRow}`}
+                    onClick={() => handleOpenBenchmark(score.benchmarkId)}
+                  >
+                    <div className={styles.benchmarkTitleGroup}>
+                      <span className={styles.benchmarkName}>{score.benchmarkName}</span>
+                      <span className={styles.benchmarkCategoryBadge}>{score.categoryLabel}</span>
+                    </div>
+                    <div className={styles.benchmarkScoreGroup}>
+                      <span className={styles.benchmarkScore}>{formatScore(score.score)}</span>
+                      <IconChevron width={14} height={14} className={styles.rowChevron} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
         </section>
       ) : null}
 
-      {tab === "discussions" || tab === "guides" ? <RelatedPosts posts={tabPosts} /> : null}
+      {tab === "discussions" || tab === "guides" ? (
+        <section className={styles.block}>
+          <RelatedPosts posts={tabPosts} />
+        </section>
+      ) : null}
     </div>
   );
 }
 
+function formatScore(value: number | null | undefined): string {
+  if (value === null || value === undefined || typeof value !== "number" || isNaN(value)) {
+    return "—";
+  }
+  if (Number.isInteger(value)) return String(value);
+  return value.toFixed(value < 2 ? 2 : 1);
+}
