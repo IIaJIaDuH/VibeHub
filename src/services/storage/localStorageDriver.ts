@@ -5,6 +5,9 @@ export const STORAGE_KEYS = {
   COLLECTIONS: "vibehub.collections",
   QUICK_ACCESS: "vibehub.quickAccess",
   BOOKMARKS: "vibehub.bookmarks",
+  USER_PROFILE: "vibehub.user.profile",
+  AUTH_USER: "vibehub.auth.user",
+  MODEL_REACTIONS: "vibehub.model.reactions",
 } as const;
 
 export const CURRENT_STORAGE_VERSION = "1";

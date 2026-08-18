@@ -31,3 +31,4 @@ export function useUnsavedChanges(dirty: boolean) {
 export function isDraftDirty<T>(current: T, initial: T) {
   return JSON.stringify(current) !== JSON.stringify(initial);
 }
+

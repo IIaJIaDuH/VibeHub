@@ -1,24 +1,22 @@
-import { memo, useMemo, useState, type KeyboardEvent } from "react";
-import { CategoryStrip } from "../../components/CategoryStrip/CategoryStrip";
+import { useCallback, useMemo, useState } from "react";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import { EmptyState } from "../../components/EmptyState/EmptyState";
-import { IconButton } from "../../components/IconButton/IconButton";
-import { IconBookmark } from "../../components/icons";
+import { ModelRow } from "../../components/ModelRow";
 import { PageHeader } from "../../components/PageHeader/PageHeader";
-import { ProviderMark } from "../../components/ProviderMark/ProviderMark";
 import { Select } from "../../components/ui/Select";
 import { filterAndSortModels } from "../../services/models";
 import { isSaved } from "../../services/saved";
 import { useHub } from "../../state/HubContext";
-import type { Model, ModelFilter, ModelSort } from "../../types/models";
+import type { ModelSort } from "../../types/models";
 import { ModelSkeletonList } from "./ModelSkeleton";
 import styles from "./Models.module.css";
 
-const FILTERS: { id: ModelFilter; label: string }[] = [
-  { id: "all", label: "Все" },
-  { id: "vision", label: "Vision" },
-  { id: "reasoning", label: "Reasoning" },
-  { id: "tools", label: "Tools" },
-  { id: "free", label: "Free" },
+const CAPABILITY_OPTIONS = [
+  { value: "vision", label: "Vision" },
+  { value: "reasoning", label: "Reasoning" },
+  { value: "tools", label: "Tools" },
+  { value: "audio", label: "Audio" },
+  { value: "free", label: "Бесплатные" },
 ];
 
 const SORT_OPTIONS: { value: ModelSort; label: string }[] = [
@@ -41,13 +39,32 @@ export function ModelsPage() {
     openEntity,
   } = useHub();
 
-  const [filter, setFilter] = useState<ModelFilter>("all");
-  const [provider, setProvider] = useState("all");
+  const search = useSearch({ strict: false }) as { provider?: string } | undefined;
+  const searchProvider = search?.provider;
+  const navigate = useNavigate();
+
+  const [capabilities, setCapabilities] = useState<string[]>([]);
   const [sort, setSort] = useState<ModelSort>("catalog");
 
   const providers = useMemo(
     () => [...new Set(models.map((m) => m.provider))].sort((a, b) => a.localeCompare(b)),
     [models],
+  );
+
+  const provider = useMemo(() => {
+    if (!searchProvider) return "all";
+    const matched = providers.find((p) => p.toLowerCase() === searchProvider.toLowerCase());
+    return matched || searchProvider;
+  }, [searchProvider, providers]);
+
+  const handleProviderChange = useCallback(
+    (nextProvider: string) => {
+      navigate({
+        to: "/models",
+        search: nextProvider === "all" ? {} : { provider: nextProvider },
+      });
+    },
+    [navigate],
   );
 
   const providerOptions = useMemo(() => {
@@ -58,38 +75,41 @@ export function ModelsPage() {
   const visible = useMemo(
     () =>
       filterAndSortModels(models, {
-        filter,
+        capabilities,
         provider,
         sort,
       }),
-    [models, filter, provider, sort],
+    [models, capabilities, provider, sort],
   );
+
+  const hasActiveFilters = capabilities.length > 0 || provider !== "all";
 
   return (
     <div className={styles.page}>
       <PageHeader title="Модели">
-        <CategoryStrip
-          items={FILTERS}
-          value={filter}
-          onChange={(id) => setFilter(id as ModelFilter)}
-        />
-        <div className={styles.secondary}>
-          <div className={styles.toolbar}>
-            <Select
-              label="Provider"
-              value={provider}
-              options={providerOptions}
-              onChange={setProvider}
-              searchable
-              searchPlaceholder="Поиск провайдера..."
-            />
-            <Select
-              label="Сортировка"
-              value={sort}
-              options={SORT_OPTIONS}
-              onChange={(val) => setSort(val as ModelSort)}
-            />
-          </div>
+        <div className={styles.toolbar}>
+          <Select
+            label="Provider"
+            value={provider}
+            options={providerOptions}
+            onChange={handleProviderChange}
+            searchable
+            searchPlaceholder="Поиск провайдера..."
+          />
+          <Select
+            label="Возможности"
+            multiple
+            value={capabilities}
+            options={CAPABILITY_OPTIONS}
+            onChange={setCapabilities}
+            placeholder="Все"
+          />
+          <Select
+            label="Сортировка"
+            value={sort}
+            options={SORT_OPTIONS}
+            onChange={(val) => setSort(val as ModelSort)}
+          />
         </div>
       </PageHeader>
 
@@ -105,13 +125,13 @@ export function ModelsPage() {
       ) : visible.length === 0 ? (
         <EmptyState>
           <p>Модели не найдены по выбранным фильтрам.</p>
-          {filter !== "all" || provider !== "all" ? (
+          {hasActiveFilters ? (
             <button
               type="button"
               className={styles.resetBtn}
               onClick={() => {
-                setFilter("all");
-                setProvider("all");
+                setCapabilities([]);
+                handleProviderChange("all");
               }}
             >
               Сбросить фильтры
@@ -120,9 +140,11 @@ export function ModelsPage() {
         </EmptyState>
       ) : (
         <>
-          <div className={styles.countInfo}>
-            Показано моделей: {visible.length}
-            {visible.length !== models.length ? ` из ${models.length}` : ""}
+          <div className={styles.listHeader}>
+            <div className={styles.countInfo}>
+              Показано моделей: {visible.length}
+              {visible.length !== models.length ? ` из ${models.length}` : ""}
+            </div>
           </div>
           <ul className={styles.list}>
             {visible.map((model) => (
@@ -142,79 +164,3 @@ export function ModelsPage() {
   );
 }
 
-const ModelRow = memo(function ModelRow({
-  model,
-  bookmarked,
-  onBookmark,
-  onOpen,
-}: {
-  model: Model;
-  bookmarked: boolean;
-  onBookmark: () => void;
-  onOpen: () => void;
-}) {
-  const hasReasoning = model.capabilities.includes("Reasoning");
-  const hasVision = model.capabilities.includes("Vision");
-  const hasTools = model.capabilities.includes("Tools");
-  const hasAudio = model.capabilities.includes("Audio");
-
-  const handleKeyDown = (e: KeyboardEvent<HTMLElement>) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      onOpen();
-    }
-  };
-
-  return (
-    <article
-      className={styles.row}
-      role="button"
-      tabIndex={0}
-      onClick={onOpen}
-      onKeyDown={handleKeyDown}
-      aria-label={`Открыть модель ${model.name} (${model.provider})`}
-    >
-      <ProviderMark model={model} />
-      <div className={styles.body}>
-        <h2>{model.name}</h2>
-        <p className={styles.provider}>{model.provider}</p>
-        <div className={styles.metaRow}>
-          <span className={styles.ctx} title={`Контекст: ${model.contextLength.toLocaleString()} токенов`}>
-            {model.contextWindow} ctx
-          </span>
-          <span
-            className={`${styles.pricing} ${model.pricing.isFree ? styles.pricingFree : ""}`}
-            title={`Цена: Prompt $${model.pricing.promptPerMillion.toFixed(2)} / Completion $${model.pricing.completionPerMillion.toFixed(2)} за 1M токенов`}
-          >
-            {model.pricing.formattedSummary}
-          </span>
-          {hasReasoning ? <span className={`${styles.tag} ${styles.tagReasoning}`}>Reasoning</span> : null}
-          {hasVision ? <span className={`${styles.tag} ${styles.tagVision}`}>Vision</span> : null}
-          {hasTools ? <span className={`${styles.tag} ${styles.tagTools}`}>Tools</span> : null}
-          {hasAudio ? <span className={`${styles.tag} ${styles.tagAudio}`}>Audio</span> : null}
-          {model.releaseDate ? (
-            <span className={styles.tagDate} title="Дата добавления в каталог">
-              {model.releaseDate}
-            </span>
-          ) : null}
-        </div>
-      </div>
-      <div
-        className={styles.actions}
-        onClick={(e) => e.stopPropagation()}
-        onKeyDown={(e) => e.stopPropagation()}
-      >
-        <IconButton
-          label={bookmarked ? "Убрать из закладок" : "Сохранить"}
-          active={bookmarked}
-          onClick={(e) => {
-            e.stopPropagation();
-            onBookmark();
-          }}
-        >
-          <IconBookmark width={18} height={18} />
-        </IconButton>
-      </div>
-    </article>
-  );
-});

@@ -8,18 +8,61 @@
   gap: 8px;
 }
 
+.plusWrap {
+  position: relative;
+}
+
+.plusBtn {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm, 8px);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: all var(--ease);
+}
+
+.plusBtn:hover,
+.plusBtnActive {
+  background: var(--surface-hover);
+  border-color: var(--border-hover);
+  color: var(--accent);
+}
+
+.headerDropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 60;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius, 10px);
+  padding: 6px;
+  min-width: 220px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: menuAppear 120ms ease-out;
+}
+
 .sectionHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 32px 0 16px;
+  margin: 28px 0 12px;
 }
 
 .sectionTitle {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text);
   margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-dim);
 }
 
 .collectionsGrid {
@@ -37,17 +80,17 @@
   flex-direction: column;
   justify-content: space-between;
   padding: 18px 20px;
-  border-radius: 14px;
+  border-radius: var(--radius-lg);
   background: var(--surface);
   border: 1px solid var(--border);
   cursor: pointer;
-  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: transform var(--ease), border-color var(--ease), box-shadow var(--ease);
   min-height: 140px;
 }
 
 .collectionCard:hover {
   transform: translateY(-2px);
-  border-color: var(--border-hover, #3f3f46);
+  border-color: var(--border-hover);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
@@ -58,12 +101,89 @@
   gap: 8px;
 }
 
+.menuWrap {
+  position: relative;
+}
+
+.menuTrigger {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: var(--radius-sm);
+  color: var(--text-dim);
+}
+
+.menuTrigger:hover {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+.menuDropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 50;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 4px;
+  min-width: 150px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: menuAppear 120ms ease-out;
+}
+
+@keyframes menuAppear {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: all var(--ease);
+}
+
+.menuItem:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.menuItemDanger {
+  color: var(--danger);
+}
+
+.menuItemDanger:hover {
+  background: rgba(224, 82, 82, 0.12);
+  color: var(--danger);
+}
+
 .cardTitle {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
   letter-spacing: -0.02em;
   color: var(--text);
+  line-height: 28px;
 }
 
 .cardDesc {
@@ -242,7 +362,7 @@
 }
 
 .siteTitleLink:hover {
-  color: var(--primary, #3b82f6);
+  color: var(--accent);
 }
 
 .siteDomain {
@@ -268,12 +388,12 @@
 .actionBtn {
   background: none;
   border: 1px solid transparent;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   padding: 6px 10px;
   font-size: 12px;
   color: var(--text-dim);
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all var(--ease);
 }
 
 .actionBtn:hover {
@@ -283,8 +403,8 @@
 }
 
 .actionBtnDanger:hover {
-  color: #ef4444;
-  border-color: rgba(239, 68, 68, 0.3);
+  color: var(--danger);
+  border-color: rgba(224, 82, 82, 0.3);
 }
 
 .emptyBlock {

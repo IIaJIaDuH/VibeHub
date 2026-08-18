@@ -1,16 +1,18 @@
-import { CURRENT_USER, GITHUB_URL } from "../../data/site";
+import { useState } from "react";
 import { useHub } from "../../state/HubContext";
+import { profileService } from "../../services/profile";
 import type { Route } from "../../types/hub";
+import { UserMenu } from "../UserMenu/UserMenu";
 import {
   IconBenchmarks,
   IconBookmarks,
-  IconCollections,
-  IconGithub,
+  IconChat,
+  IconFeed,
+  IconLogIn,
   IconModels,
   IconPanel,
   IconPlus,
   IconSearch,
-  IconTools,
 } from "../icons";
 import styles from "./Sidebar.module.css";
 
@@ -19,28 +21,32 @@ interface SidebarProps {
   onNavigate: () => void;
 }
 
-const MAIN: { id: Route; label: string; icon: typeof IconModels }[] = [
-  { id: "models", label: "Модели", icon: IconModels },
-  { id: "tools", label: "Инструменты", icon: IconTools },
-  { id: "benchmarks", label: "Бенчмарки", icon: IconBenchmarks },
-];
-
-const LIBRARY: { id: Route; label: string; icon: typeof IconBookmarks }[] = [
-  { id: "bookmarks", label: "Закладки", icon: IconBookmarks },
-  { id: "collections", label: "Коллекции", icon: IconCollections },
-];
-
 export function Sidebar({ mobileOpen, onNavigate }: SidebarProps) {
   const {
     route,
+    authStatus,
+    setAuthModalOpen,
     setRoute,
     setAddOpen,
     setSearchOpen,
     sidebarCollapsed,
     setSidebarCollapsed,
+    chatOpen,
+    setChatOpen,
+    setSettingsOpen,
+    logout,
+    userProfile,
   } = useHub();
 
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+
   const tip = (label: string) => (sidebarCollapsed ? label : undefined);
+  const initials = profileService.getInitials(userProfile.displayName, userProfile.username);
+
+  const navigateTo = (nextRoute: Route) => {
+    setRoute(nextRoute);
+    onNavigate();
+  };
 
   return (
     <aside
@@ -48,12 +54,13 @@ export function Sidebar({ mobileOpen, onNavigate }: SidebarProps) {
         mobileOpen ? styles.mobileOpen : ""
       }`}
     >
+      {/* Top Brand & Collapse button */}
       <div className={styles.brandRow}>
         <button
           type="button"
           className={styles.brand}
           title={tip("VibeHub")}
-          onClick={() => setRoute("models")}
+          onClick={() => navigateTo("models")}
         >
           <span className={styles.wordmark}>
             <span className={styles.vibe}>Vibe</span>
@@ -71,76 +78,133 @@ export function Sidebar({ mobileOpen, onNavigate }: SidebarProps) {
         </button>
       </div>
 
-      <nav className={styles.nav} aria-label="Поиск">
-        <button
-          type="button"
-          className={styles.link}
-          title={tip("Поиск")}
-          onClick={() => setSearchOpen(true)}
-        >
-          <IconSearch width={22} height={22} />
-          <span>Поиск</span>
-        </button>
-      </nav>
-
-      <nav className={styles.nav} aria-label="Разделы">
-        {MAIN.map((item) => (
+      <div className={styles.navWrap}>
+        {/* Группа 1: Исследовать */}
+        <div className={styles.group}>
+          <div className={styles.groupTitle}>Исследовать</div>
+          <button
+            type="button"
+            className={styles.link}
+            title={tip("Поиск")}
+            onClick={() => setSearchOpen(true)}
+          >
+            <IconSearch width={20} height={20} />
+            <span>Поиск</span>
+          </button>
           <NavButton
-            key={item.id}
-            item={item}
-            active={route === item.id}
-            tooltip={tip(item.label)}
-            onClick={() => {
-              setRoute(item.id);
-              onNavigate();
-            }}
+            item={{ id: "models", label: "Модели", icon: IconModels }}
+            active={route === "models"}
+            tooltip={tip("Модели")}
+            onClick={() => navigateTo("models")}
           />
-        ))}
-      </nav>
-
-      <button
-        type="button"
-        className={`${styles.link} ${styles.share}`}
-        title={tip("Поделиться")}
-        onClick={() => setAddOpen(true)}
-      >
-        <IconPlus width={22} height={22} />
-        <span>Поделиться</span>
-      </button>
-
-      <nav className={styles.library} aria-label="Библиотека">
-        {LIBRARY.map((item) => (
           <NavButton
-            key={item.id}
-            item={item}
-            active={route === item.id}
-            tooltip={tip(item.label)}
-            onClick={() => {
-              setRoute(item.id);
-              onNavigate();
-            }}
+            item={{ id: "benchmarks", label: "Бенчмарки", icon: IconBenchmarks }}
+            active={route === "benchmarks"}
+            tooltip={tip("Бенчмарки")}
+            onClick={() => navigateTo("benchmarks")}
           />
-        ))}
-      </nav>
-
-      <div className={styles.bottom}>
-        <a
-          className={styles.link}
-          href={GITHUB_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          title={tip("GitHub")}
-        >
-          <IconGithub width={22} height={22} />
-          <span>GitHub</span>
-        </a>
-        <div className={styles.user} title={tip(CURRENT_USER.name)}>
-          <span className={styles.avatar}>{CURRENT_USER.initials}</span>
-          <div className={styles.userMeta}>
-            <strong>{CURRENT_USER.name}</strong>
-            <span>@{CURRENT_USER.handle}</span>
-          </div>
         </div>
+
+        {/* Группа 2: Сообщество */}
+        <div className={styles.group}>
+          <div className={styles.groupTitle}>Сообщество</div>
+          <NavButton
+            item={{ id: "feed", label: "Лента", icon: IconFeed }}
+            active={route === "feed"}
+            tooltip={tip("Лента")}
+            onClick={() => navigateTo("feed")}
+          />
+          <button
+            type="button"
+            className={`${styles.link} ${chatOpen ? styles.active : ""}`}
+            title={tip("Чат")}
+            onClick={() => setChatOpen(!chatOpen)}
+          >
+            <IconChat width={20} height={20} />
+            <span>Чат</span>
+          </button>
+          <button
+            type="button"
+            className={styles.link}
+            title={tip("Поделиться")}
+            onClick={() => setAddOpen(true)}
+          >
+            <IconPlus width={20} height={20} />
+            <span>Поделиться</span>
+          </button>
+        </div>
+
+        {/* Группа 3: Моё */}
+        <div className={styles.group}>
+          <div className={styles.groupTitle}>Моё</div>
+          <NavButton
+            item={{ id: "saved", label: "Сохранённое", icon: IconBookmarks }}
+            active={route === "saved" || route === "bookmarks" || route === "collections"}
+            tooltip={tip("Сохранённое")}
+            onClick={() => navigateTo("saved")}
+          />
+        </div>
+      </div>
+
+      {/* Нижний блок: Auth / Profile */}
+      <div className={styles.bottom}>
+        {authStatus === "anonymous" ? (
+          sidebarCollapsed && !mobileOpen ? (
+            <button
+              type="button"
+              className={styles.collapsedLoginBtn}
+              title="Войти"
+              aria-label="Войти"
+              onClick={() => setAuthModalOpen(true)}
+            >
+              <IconLogIn width={20} height={20} />
+            </button>
+          ) : (
+            <button
+              type="button"
+              className={styles.loginBtn}
+              onClick={() => setAuthModalOpen(true)}
+            >
+              Войти
+            </button>
+          )
+        ) : (
+          <>
+            <button
+              type="button"
+              className={`${styles.userBtn} ${userMenuOpen ? styles.userBtnActive : ""}`}
+              title={tip(userProfile.displayName)}
+              onClick={() => setUserMenuOpen((prev) => !prev)}
+            >
+              <div className={styles.avatar}>
+                {userProfile.avatarUrl || userProfile.avatar ? (
+                  <img
+                    src={userProfile.avatarUrl || userProfile.avatar}
+                    alt={userProfile.displayName}
+                    className={styles.avatarImg}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = "none";
+                    }}
+                  />
+                ) : (
+                  <span>{initials}</span>
+                )}
+              </div>
+              <div className={styles.userMeta}>
+                <strong>{userProfile.displayName}</strong>
+                <span>@{userProfile.username}</span>
+              </div>
+            </button>
+            <UserMenu
+              profile={userProfile}
+              isOpen={userMenuOpen}
+              onClose={() => setUserMenuOpen(false)}
+              onOpenProfile={() => navigateTo("profile")}
+              onOpenSettings={() => setSettingsOpen(true)}
+              onLogout={() => logout()}
+            />
+          </>
+        )}
       </div>
     </aside>
   );
@@ -166,7 +230,7 @@ function NavButton({
       title={tooltip}
       onClick={onClick}
     >
-      <Icon width={22} height={22} />
+      <Icon width={20} height={20} />
       <span>{item.label}</span>
     </button>
   );
