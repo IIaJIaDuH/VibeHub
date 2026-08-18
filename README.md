@@ -45,11 +45,14 @@ npm run test      # vitest
 - **Состояние** (`src/state/HubContext.tsx`): единый контекст. Навигация (`route`, `entityView`) выведена из URL через хелперы в `src/state/routing.ts`, переключение — через роутер.
 - **Данные моделей** (`src/services/models/`): живьё из OpenRouter API с кэшем (10 минут, sessionStorage). Абстракция `ModelProvider` позволяет добавить другие источники.
 - **Персистентность** (`src/services/collections/`, `src/services/saved.ts`): закладки, коллекции и Quick Access хранятся в localStorage через repository-интерфейсы.
-- **Сообщества** (`src/services/posts.ts`, `src/features/share/`): посты, комментарии, принятие ответа. Пока в памяти браузера — после подключения бэкенда переедет на сервер.
+- **Сообщества** (`src/features/share/`, `src/services/posts.ts`): посты, комментарии, принятие ответа. Чтение — из Supabase через read-репозиторий и маппер (`src/services/posts/`), запись пока в памяти браузера.
+- **Бэкенд-фундамент** (`supabase/migrations/0001_profiles_posts_comments.sql`, `src/services/supabase/`): Supabase, таблицы `profiles`, `posts`, `comments` с RLS. Без `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY` приложение использует пустой `INITIAL_POSTS` как fallback. Auth и write path ещё не включены.
 
 ### Важно про окружение
 
 Переменные с префиксом `VITE_` попадают в клиентский бандл. **Никогда** не указывайте API-ключи и другие секреты в `.env` или `.env.example` для `VITE_*`. См. `.env.example`.
+
+Для Supabase нужны `VITE_SUPABASE_URL` и `VITE_SUPABASE_ANON_KEY`. Anon key — публичный, он попадает в клиентский бандл, это ожидаемо. **Никогда** не используйте `service_role` key в клиенте: он обходит RLS и даёт полный доступ к базе.
 
 ## Как внести вклад
 
