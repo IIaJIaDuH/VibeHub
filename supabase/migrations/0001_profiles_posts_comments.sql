@@ -122,10 +122,10 @@ DECLARE
 BEGIN
   -- Prefer explicit name, then full_name, then email; never store an empty string.
   user_name := pg_catalog.left(
-    pg_catalog.coalesce(
-      pg_catalog.nullif(pg_catalog.trim(raw_meta ->> 'name'), ''),
-      pg_catalog.nullif(pg_catalog.trim(raw_meta ->> 'full_name'), ''),
-      pg_catalog.nullif(pg_catalog.trim(NEW.email), ''),
+    coalesce(
+      nullif(pg_catalog.btrim(raw_meta ->> 'name'), ''),
+      nullif(pg_catalog.btrim(raw_meta ->> 'full_name'), ''),
+      nullif(pg_catalog.btrim(NEW.email), ''),
       'Anonymous'
     ),
     100
@@ -133,9 +133,9 @@ BEGIN
 
   -- Build initials from the chosen name, capped at 3 characters.
   user_initials := pg_catalog.left(
-    pg_catalog.coalesce(
-      pg_catalog.nullif(pg_catalog.trim(raw_meta ->> 'initials'), ''),
-      pg_catalog.nullif((
+    coalesce(
+      nullif(pg_catalog.btrim(raw_meta ->> 'initials'), ''),
+      nullif((
         SELECT pg_catalog.upper(pg_catalog.string_agg(pg_catalog.left(word, 1), ''))
         FROM pg_catalog.unnest(pg_catalog.string_to_array(user_name, ' ')) AS word
         WHERE pg_catalog.length(word) > 0
@@ -148,7 +148,7 @@ BEGIN
   -- Accept only safe handles: 3-30 lowercase alphanumerics/underscores.
   user_handle := pg_catalog.lower(
     pg_catalog.regexp_replace(
-      pg_catalog.nullif(pg_catalog.trim(raw_meta ->> 'handle'), ''),
+      nullif(pg_catalog.btrim(raw_meta ->> 'handle'), ''),
       '\s+',
       '_',
       'g'
@@ -281,3 +281,14 @@ DROP POLICY IF EXISTS "Users can delete own comments" ON public.comments;
 CREATE POLICY "Users can delete own comments" ON public.comments
   FOR DELETE TO authenticated
   USING (auth.uid() = author_id);
+
+-- Grants: RLS policies only filter rows; table privileges are required for access.
+-- Public read for anon + authenticated; writes restricted to authenticated (owners).
+GRANT SELECT ON public.profiles TO anon, authenticated;
+GRANT INSERT, UPDATE, DELETE ON public.profiles TO authenticated;
+
+GRANT SELECT ON public.posts TO anon, authenticated;
+GRANT INSERT, UPDATE, DELETE ON public.posts TO authenticated;
+
+GRANT SELECT ON public.comments TO anon, authenticated;
+GRANT INSERT, UPDATE, DELETE ON public.comments TO authenticated;
