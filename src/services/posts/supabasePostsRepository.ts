@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "../supabase/database.types";
 import type { Post, PostComment } from "../../types/posts";
 import { mapComment, mapPost } from "./mapper";
 import type { PostsRepository } from "./types";
@@ -12,9 +13,9 @@ const COMMENTS_SELECT = "*, author:profiles!author_id(*)";
 const SINGLE_ROW_ERROR_CODE = "PGRST116";
 
 export class SupabasePostsRepository implements PostsRepository {
-  private client: SupabaseClient | null;
+  private client: SupabaseClient<Database> | null;
 
-  constructor(client: SupabaseClient | null) {
+  constructor(client: SupabaseClient<Database> | null) {
     this.client = client;
   }
 
